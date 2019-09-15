@@ -16,9 +16,15 @@
 ## You should have received a copy of the GNU General Public License along
 ## with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+TESTS =
+TESTS += scheme/application.scm
 
-ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+TEST_EXTENSIONS = .scm
 
-SUBDIRS = application test-suite
+TESTS_ENVIRONMENT = \
+	$(abs_top_builddir)/pre-inst-env		\
+	$(GUILE) -L $(abs_top_builddir)/test-suite	\
+		 --no-auto-compile
 
-EXTRA_DIST = m4/introspection.m4
+EXTRA_DIST = \
+	$(TESTS)
