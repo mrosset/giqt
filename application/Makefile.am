@@ -16,33 +16,39 @@
 ## You should have received a copy of the GNU General Public License along
 ## with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+AM_CFLAGS = -Wall -Werror -Wdeclaration-after-statement
+
 libgiqt_application_LTLIBRARIES = libgiqt-application.la
 libgiqt_applicationdir = $(libexecdir)/giqt/
 
-libgiqt_application_la_SOURCES =  qt-application.c qt-application.h
+libgiqt_application_la_SOURCES = qt-application.c qt-application.h
 
 libgiqt_application_la_CFLAGS =  $(AM_CFLAGS)
 libgiqt_application_la_CFLAGS += $(GLIB_CFLAGS)
+libgiqt_application_la_CFLAGS += $(GOBJECT_CFLAGS)
+
+libgiqt_application_la_LIBADD =  $(GLIB_LIBS)
+libgiqt_application_la_LIBADD +=  $(GOBJECT_LIBS)
 
 libgiqt_application_la_LDFLAGS = -avoid-version -no-undefined
 
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --warn-all \
+	-n QtApplication \
 	--include GObject-2.0 \
-	--namespace QtApplication
+	--include Gio-2.0
 
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
 introspection_sources = qt-application.h
 
-QtApplication-1.0.gir: libgiqt-application.la
-QtApplication_1_0_INCLUDES =
-QtApplictaion_1_0_gir_CFLAGS = $(libgiqt_la_CFLAGS)
-QtApplictaion_1_0_gir_LIBS = libgiqt-application.la
-QtApplication_1_0_gir_LIBS = libgiqt-application.la
-QtApplication_1_0_gir_FILES = $(introspection_sources)
-INTROSPECTION_GIRS += QtApplication-1.0.gir
+Qt-1.0.gir: libgiqt-application.la
+Qt_1_0_INCLUDES =
+Qt_1_0_gir_CFLAGS = $(libgiqt_la_CFLAGS)
+Qt_1_0_gir_LIBS = libgiqt-application.la
+Qt_1_0_gir_FILES = $(introspection_sources)
+INTROSPECTION_GIRS += Qt-1.0.gir
 
 girdir = $(datadir)/gir-1.0
 gir_DATA = $(INTROSPECTION_GIRS)

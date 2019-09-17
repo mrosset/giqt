@@ -21,42 +21,23 @@
 #ifndef _QT_APPLICATION_H_
 #define _QT_APPLICATION_H_
 
+#include <gio/gio.h>
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define QT_TYPE_APPLICATION (qt_application_get_type ())
-#define QT_APPLICATION(obj)                                                   \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), QT_TYPE_APPLICATION, QtApplication))
-#define QT_APPLICATION_CLASS(klass)                                           \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), QT_TYPE_APPLICATION, QtApplicationClass))
-#define QT_IS_APPLICATION(obj)                                                \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), QT_TYPE_APPLICATION))
-#define QT_IS_APPLICATION_CLASS(klass)                                        \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), QT_TYPE_APPLICATION))
-#define QT_APPLICATION_GET_CLASS(obj)                                         \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), QT_TYPE_APPLICATION, QtApplicationClass))
+/*
+ * Type declaration.
+ */
+#define QT_TYPE_APPLICATION qt_application_get_type ()
+G_DECLARE_FINAL_TYPE (QtApplication, qt_application, QT, APPLICATION, GObject)
 
-typedef struct _QtApplicationClass QtApplicationClass;
-typedef struct _QtApplication QtApplication;
-typedef struct _QtApplicationPrivate QtApplicationPrivate;
-
-struct _QtApplicationClass
-{
-  GObjectClass parent_class;
-};
-
-struct _QtApplication
-{
-  GObject parent_instance;
-
-  QtApplicationPrivate *priv;
-};
-
-GType qt_application_get_type (void) G_GNUC_CONST;
+/*
+ * Method definitions.
+ */
+QtApplication *qt_application_new (void);
+const char *qt_application_version (QtApplication *self);
 
 G_END_DECLS
-
-const char *qt_application_version ();
 
 #endif /* _QT_APPLICATION_H_ */

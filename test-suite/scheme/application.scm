@@ -20,9 +20,12 @@
              (g-golf)
              (unit-test))
 
-(gi-import "QtApplication")
+(gi-import "Qt")
 
 (define-class <test-application> (<test-case>))
 
 (define-method (test-version (self <test-application>))
-  (assert-equal "0.1.0-alpha" (qt-application-version)))
+  (let ((app (make <qt-application>)))
+    (assert-equal "0.0.1-alpha" (qt-application-version app))))
+
+(exit-with-summary (run-all-defined-test-cases))

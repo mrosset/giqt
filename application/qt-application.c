@@ -19,19 +19,28 @@
  */
 
 #include "qt-application.h"
+#include "../config.h"
+
+typedef struct _QtApplicationPrivate QtApplicationPrivate;
 
 struct _QtApplicationPrivate
 {
+  const char *version;
 };
 
-G_DEFINE_TYPE (QtApplication, qt_application, G_TYPE_OBJECT);
+struct _QtApplication
+{
+  GObject parent;
+  QtApplicationPrivate *priv;
+};
+
+G_DEFINE_TYPE_WITH_PRIVATE (QtApplication, qt_application, G_TYPE_OBJECT);
 
 static void
-qt_application_init (QtApplication *qt_application)
+qt_application_init (QtApplication *self)
 {
-  qt_application->priv = G_TYPE_INSTANCE_GET_PRIVATE (
-      qt_application, QT_TYPE_APPLICATION, QtApplicationPrivate);
-
+  self->priv = qt_application_get_instance_private (self);
+  self->priv->version = VERSION;
   /* TODO: Add initialization code here */
 }
 
@@ -48,13 +57,11 @@ qt_application_class_init (QtApplicationClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  g_type_class_add_private (klass, sizeof (QtApplicationPrivate));
-
   object_class->finalize = qt_application_finalize;
 }
 
 const char *
-qt_application_version ()
+qt_application_version (QtApplication *self)
 {
-  return "0.0.1-alpha";
+  return self->priv->version;
 }

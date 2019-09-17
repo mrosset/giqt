@@ -16,30 +16,31 @@ dnl See the GNU General Public License for more details.
 dnl You should have received a copy of the GNU General Public License along
 dnl with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# autoconf
-AC_INIT([giqt], [0.0.1-alpha], [mike.rosset@gmail.com])
+dnl autoconf
+AC_INIT([giqt],[0.0.1-alpha],[mike.rosset@gmail.com])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIRS([m4])
 
-# automake
+dnl automake
 AM_INIT_AUTOMAKE([-Wall gnu silent-rules color-tests serial-tests])
 AM_SILENT_RULES([yes])
 
-# programs
-AC_PROG_CPP
+dnl programs
+AC_PROG_CXX
 AM_PROG_AR
 AC_PROG_LN_S
 AC_PROG_INSTALL
 AC_PROG_MKDIR_P
-AC_PROG_LIBTOOL
+AC_DISABLE_STATIC
 
-# libtool
+dnl libtool
 LT_INIT([dlopen])
 
 GUILE_PROGS
 
 PKG_CHECK_MODULES(GLIB, [glib-2.0])
+PKG_CHECK_MODULES(GOBJECT, [gobject-2.0])
 
 GOBJECT_INTROSPECTION_CHECK([1.30.0])
 
@@ -52,3 +53,19 @@ application/Makefile
 AC_CONFIG_FILES([pre-inst-env], [chmod +x pre-inst-env])
 
 AC_OUTPUT
+
+AC_MSG_NOTICE([summary of build options:
+
+  version:              ${VERSION}
+  Host/Target system:   ${host}
+  Build system:         ${build}
+  Install prefix:       ${prefix}
+  Compiler:             ${CXX}
+  CFlags:               ${CFLAGS}
+  Library types:        Shared=${enable_shared}, Static=${enable_static}
+])
+
+AC_MSG_NOTICE([summary of pkg-config libraries:
+
+  glib:		       ${GLIB_LIBS}
+])
