@@ -28,7 +28,8 @@ libgiqt_application_la_CFLAGS += $(GLIB_CFLAGS)
 libgiqt_application_la_CFLAGS += $(GOBJECT_CFLAGS)
 
 libgiqt_application_la_LIBADD =  $(GLIB_LIBS)
-libgiqt_application_la_LIBADD +=  $(GOBJECT_LIBS)
+libgiqt_application_la_LIBADD += $(GOBJECT_LIBS)
+libgiqt_application_la_LIBADD += $(GIO_LIBS)
 
 libgiqt_application_la_LDFLAGS = -avoid-version -no-undefined
 

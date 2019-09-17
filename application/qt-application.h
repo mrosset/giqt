@@ -30,7 +30,8 @@ G_BEGIN_DECLS
  * Type declaration.
  */
 #define QT_TYPE_APPLICATION qt_application_get_type ()
-G_DECLARE_FINAL_TYPE (QtApplication, qt_application, QT, APPLICATION, GObject)
+G_DECLARE_FINAL_TYPE (QtApplication, qt_application, QT, APPLICATION,
+                      GApplication)
 
 /*
  * Method definitions.
