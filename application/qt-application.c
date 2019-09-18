@@ -36,6 +36,12 @@ struct _QtApplication
 
 G_DEFINE_TYPE_WITH_PRIVATE (QtApplication, qt_application, G_TYPE_APPLICATION);
 
+QtApplication *
+qt_application_new ()
+{
+  return g_object_new (QT_TYPE_APPLICATION, NULL);
+}
+
 static void
 qt_application_init (QtApplication *self)
 {

@@ -17,14 +17,13 @@
 ## with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 TESTS =
-TESTS += scheme/application.scm
+TESTS += application.lisp
 
 TEST_EXTENSIONS = .scm
 
 TESTS_ENVIRONMENT = \
 	$(abs_top_builddir)/pre-inst-env		\
-	$(GUILE) -L $(abs_top_builddir)/test-suite	\
-		 --no-auto-compile
+	sbcl --script
 
 EXTRA_DIST = \
 	$(TESTS)

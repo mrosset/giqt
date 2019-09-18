@@ -47,7 +47,8 @@ GOBJECT_INTROSPECTION_CHECK([1.30.0])
 
 AC_CONFIG_FILES([
 Makefile
-test-suite/Makefile
+test-suite/scheme/Makefile
+test-suite/lisp/Makefile
 application/Makefile
 ])
 

@@ -34,9 +34,15 @@ G_DECLARE_FINAL_TYPE (QtApplication, qt_application, QT, APPLICATION,
                       GApplication)
 
 /*
+ * Constructors
+ */
+
+QtApplication *qt_application_new (void);
+
+/*
  * Method definitions.
  */
-QtApplication *qt_application_new (void);
+
 const char *qt_application_version (QtApplication *self);
 
 G_END_DECLS
