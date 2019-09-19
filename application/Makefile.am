@@ -16,28 +16,31 @@
 ## You should have received a copy of the GNU General Public License along
 ## with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-AM_CFLAGS = -Wall -Werror -Wdeclaration-after-statement
+AM_CPPFLAGS = -Wall -Werror -Wno-write-strings
 
 libgiqt_application_LTLIBRARIES = libgiqt-application.la
 libgiqt_applicationdir = $(libexecdir)/giqt/
 
-libgiqt_application_la_SOURCES = qt-application.c qt-application.h
+libgiqt_application_la_SOURCES = qt-application.cpp qt-application.h
 
-libgiqt_application_la_CFLAGS  = $(AM_CFLAGS)
-libgiqt_application_la_CFLAGS += $(GIO_CFLAGS)
-libgiqt_application_la_CFLAGS += $(GLIB_CFLAGS)
-libgiqt_application_la_CFLAGS += $(GOBJECT_CFLAGS)
+libgiqt_application_la_CPPFLAGS  = $(AM_CPPFLAGS)
+libgiqt_application_la_CPPFLAGS += $(GIO_CFLAGS)
+libgiqt_application_la_CPPFLAGS += $(GLIB_CFLAGS)
+libgiqt_application_la_CPPFLAGS += $(GOBJECT_CFLAGS)
+libgiqt_application_la_CPPFLAGS += $(QT_WIDGET_CFLAGS)
+libgiqt_application_la_CPPFLAGS += $(QT_WEBENGINE_WIDGETS_CFLAGS)
 
 libgiqt_application_la_LIBADD  = $(GIO_LIBS)
 libgiqt_application_la_LIBADD += $(GLIB_LIBS)
 libgiqt_application_la_LIBADD += $(GOBJECT_LIBS)
+libgiqt_application_la_LIBADD += $(QT_WIDGET_LIBS)
+libgiqt_application_la_LIBADD += $(QT_WEBENGINE_WIDGETS_LIBS)
 
 libgiqt_application_la_LDFLAGS = -avoid-version -no-undefined
 
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --warn-all \
-	-n QtApplication \
 	--include GObject-2.0 \
 	--include Gio-2.0
 
@@ -45,9 +48,9 @@ INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
 introspection_sources = qt-application.h
 
-Qt-1.0.gir: libgiqt-application.la
+Qt-1.0.gir: libgiqt-application.la Makefile.am
 Qt_1_0_INCLUDES =
-Qt_1_0_gir_CFLAGS = $(libgiqt_la_CFLAGS)
+Qt_1_0_gir_CFLAGS = $(libgiqt_la_CPPFLAGS)
 Qt_1_0_gir_LIBS = libgiqt-application.la
 Qt_1_0_gir_FILES = $(introspection_sources)
 INTROSPECTION_GIRS += Qt-1.0.gir

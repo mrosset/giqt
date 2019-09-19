@@ -20,12 +20,19 @@
              (g-golf)
              (unit-test))
 
+(gi-import "Gio")
 (gi-import "Qt")
+
+(setenv "QT_SCREEN_SCALE_FACTORS" "2")
+;; (setenv "QT_XCB_FORCE_SOFTWARE_OPENGL" "1")
 
 (define-class <test-application> (<test-case>))
 
 (define-method (test-version (self <test-application>))
-  (let ((app (make <qt-application>)))
-    (assert-equal "0.0.1-alpha" (qt-application-version app))))
+  (let ((app (make <qt-application> #:application-id "org.qt.test")))
+    (assert-equal "0.0.1-alpha"
+                  (qt-application-version app))
+    ;; (g-application-run app 0 #f)
+    ))
 
 (exit-with-summary (run-all-defined-test-cases))

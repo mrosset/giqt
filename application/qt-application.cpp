@@ -20,12 +20,15 @@
 
 #include "qt-application.h"
 #include "../config.h"
+#include <QApplication>
+#include <QGridLayout>
+#include <QMainWindow>
+#include <QWebEngineView>
 
 typedef struct _QtApplicationPrivate QtApplicationPrivate;
 
 struct _QtApplicationPrivate
 {
-  const char *version;
 };
 
 struct _QtApplication
@@ -39,14 +42,50 @@ G_DEFINE_TYPE_WITH_PRIVATE (QtApplication, qt_application, G_TYPE_APPLICATION);
 QtApplication *
 qt_application_new ()
 {
-  return g_object_new (QT_TYPE_APPLICATION, NULL);
+  return (QtApplication *)g_object_new (
+      QT_TYPE_APPLICATION, "application-id", "org.unknown", "flags",
+      G_APPLICATION_HANDLES_OPEN | G_APPLICATION_CAN_OVERRIDE_APP_ID, NULL);
+}
+
+int
+qt_application_start (QtApplication *self)
+{
+  char *argv[] = { "foo", NULL };
+  QStringList slist = QStringList ();
+  return g_application_run (G_APPLICATION (self), 1, argv);
+}
+
+static void
+startup (GApplication *application, gpointer user_data)
+{
+  g_debug ("STARTUP");
+}
+
+static void
+activate (GApplication *application, gpointer user_data)
+{
+  g_debug ("ACTIVATE");
+  int argc = 0;
+  char *argv[] = { NULL };
+  QApplication app (argc, argv);
+  QMainWindow main;
+  QWebEngineView view (&main);
+  main.setCentralWidget (&view);
+  view.load (QUrl ("https://gnu.org"));
+  main.show ();
+  app.exec ();
 }
 
 static void
 qt_application_init (QtApplication *self)
 {
-  self->priv = qt_application_get_instance_private (self);
-  self->priv->version = VERSION;
+  // self->priv
+  //     = (QtApplicationPrivate *)qt_application_get_instance_private (self);
+  // self->priv->version = VERSION;
+
+  g_signal_connect (self, "startup", G_CALLBACK (startup), NULL);
+  g_signal_connect (self, "activate", G_CALLBACK (activate), NULL);
+
   /* TODO: Add initialization code here */
 }
 
@@ -69,5 +108,5 @@ qt_application_class_init (QtApplicationClass *klass)
 const char *
 qt_application_version (QtApplication *self)
 {
-  return self->priv->version;
+  return VERSION;
 }

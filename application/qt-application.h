@@ -29,6 +29,7 @@ G_BEGIN_DECLS
 /*
  * Type declaration.
  */
+
 #define QT_TYPE_APPLICATION qt_application_get_type ()
 G_DECLARE_FINAL_TYPE (QtApplication, qt_application, QT, APPLICATION,
                       GApplication)
@@ -42,6 +43,8 @@ QtApplication *qt_application_new (void);
 /*
  * Method definitions.
  */
+
+int qt_application_start (QtApplication *self);
 
 const char *qt_application_version (QtApplication *self);
 

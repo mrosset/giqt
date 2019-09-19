@@ -1,12 +1,40 @@
-;; This is probably all wrong
+;; it's easier to use quicklisp for prototyping
 (load "~/quicklisp/setup.lisp")
+(ql:quickload :prove)
 (ql:quickload :cl-gobject-introspection)
 
-(defvar *qt* (gir:require-namespace "Qt"))
-;; we may need to init gtk at some point so keep this here
-;; (gir:invoke (*gtk* 'init) nil)
-(let* ((application (gir:invoke (*qt* "Application" 'new)))
-      (expect "0.0.1-alpha")
-      (got (gir:invoke (application 'version))))
-  (when (not (string= expect got))
-    (error (format nil "expected version ~A got ~A" expect got))))
+(in-package :cl-user)
+(defpackage giqt-test
+  (:use :cl
+        :prove))
+(in-package :giqt-test)
+
+;; TODO: remove the need for quicklisp
+;; (require 'asdf)
+;; (require 'sb-posix)
+
+;; (asdf:load-asd (concatenate 'string
+;;                             (sb-posix:getcwd)
+;;                             "/cl-gobject-introspection/cl-gobject-introspection.asd"))
+
+;; cl-gobject-introspection requires these packages
+;;
+;; cl-alexandria
+;; cl-cffi
+;; cl-iterate
+;; cl-trivial-garbage
+
+;; (require :cl-gobject-introspection)
+
+(plan 2)
+
+;; TODO: GApplication's are not trivial. Instead of bootstraping with an
+;; Application class. Bootstrap using Windows and gtk_main?
+(let* ((qt (gir:require-namespace "Qt"))
+       (application (gir:invoke (qt "Application" 'new))))
+  (is "0.0.1-alpha" (gir:invoke (application 'version)))
+  (is "org.unknown" (gir:property application 'application-id))
+  (gir:invoke (application 'start))
+)
+
+(finalize)

@@ -19,11 +19,10 @@
 TESTS =
 TESTS += application.lisp
 
-TEST_EXTENSIONS = .scm
+TEST_EXTENSIONS = .lisp
 
 TESTS_ENVIRONMENT = \
-	$(abs_top_builddir)/pre-inst-env		\
-	sbcl --script
+	$(abs_top_builddir)/pre-inst-env sbcl --script
 
 EXTRA_DIST = \
 	$(TESTS)
