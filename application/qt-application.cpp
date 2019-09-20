@@ -110,3 +110,9 @@ qt_application_version (QtApplication *self)
 {
   return VERSION;
 }
+
+const char *
+qt_application_qt_version (void)
+{
+  return QT_VERSION_STR;
+}

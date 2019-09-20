@@ -26,15 +26,16 @@
 
 ;; (require :cl-gobject-introspection)
 
-(plan 2)
+(plan 3)
 
 ;; TODO: GApplication's are not trivial. Instead of bootstraping with an
 ;; Application class. Bootstrap using Windows and gtk_main?
 (let* ((qt (gir:require-namespace "Qt"))
        (application (gir:invoke (qt "Application" 'new))))
   (is "0.0.1-alpha" (gir:invoke (application 'version)))
+  (is "5.12.2" (gir:invoke (qt "Application" 'qt_version)))
   (is "org.unknown" (gir:property application 'application-id))
-  (gir:invoke (application 'start))
+  ;; (gir:invoke (application 'start))
 )
 
 (finalize)

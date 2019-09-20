@@ -30,8 +30,8 @@
 
 (define-method (test-version (self <test-application>))
   (let ((app (make <qt-application> #:application-id "org.qt.test")))
-    (assert-equal "0.0.1-alpha"
-                  (qt-application-version app))
+    (assert-equal "0.0.1-alpha" (qt-application-version app))
+    (assert-equal "5.12.2" (qt-application-qt-version))
     ;; (g-application-run app 0 #f)
     ))
 
