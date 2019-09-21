@@ -30,10 +30,11 @@
 (define-class <test-application> (<test-case>))
 
 (define-method (test-version (self <test-application>))
-  (let ((app (make <qt-application> #:application-id "org.qt.test")))
+  (let* ((app (make <qt-application> #:application-id "org.qt.test"))
+        (thunk (lambda _ (g-application-run app 0 #f))))
     (assert-equal "0.0.1-alpha" (qt-application-version app))
     (assert-equal "5.12.2" (qt-application-qt-version))
-    (make-thread application-run app)
+    (call-with-new-thread thunk)
     (sleep 2)))
 
 (exit-with-summary (run-all-defined-test-cases))
