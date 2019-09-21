@@ -24,6 +24,7 @@
 #include <QGridLayout>
 #include <QMainWindow>
 #include <QWebEngineView>
+#include <QtWebEngine>
 
 typedef struct _QtApplicationPrivate QtApplicationPrivate;
 
@@ -68,6 +69,7 @@ activate (GApplication *application, gpointer user_data)
   int argc = 0;
   char *argv[] = { NULL };
   QApplication app (argc, argv);
+  QtWebEngine::initialize ();
   QMainWindow main;
   QWebEngineView view (&main);
   main.setCentralWidget (&view);

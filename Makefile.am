@@ -22,3 +22,6 @@ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 SUBDIRS = application test-suite/scheme test-suite/lisp
 
 EXTRA_DIST = m4/introspection.m4
+
+guix: guix.scm
+	guix build -f $<

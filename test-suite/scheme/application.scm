@@ -25,6 +25,7 @@
 
 (setenv "QT_SCREEN_SCALE_FACTORS" "2")
 ;; (setenv "QT_XCB_FORCE_SOFTWARE_OPENGL" "1")
+;; (setenv "QTWEBENGINEPROCESS_PATH" "/gnu/store/829z6gb6nvlrik5xx8zxxjdxim71sc8i-qtwebengine-5.11.3/lib/qt5/libexec/QtWebEngineProcess")
 
 (define-class <test-application> (<test-case>))
 
