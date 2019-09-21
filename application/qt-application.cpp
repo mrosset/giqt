@@ -63,7 +63,7 @@ startup (GApplication *application, gpointer user_data)
 }
 
 static void
-activate (GApplication *application, gpointer user_data)
+activate (QtApplication *self, gpointer user_data)
 {
   g_debug ("ACTIVATE");
   int argc = 0;
