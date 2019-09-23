@@ -22,6 +22,7 @@
 #include "../config.h"
 #include <QApplication>
 #include <QGridLayout>
+#include <QLabel>
 #include <QMainWindow>
 #include <QWebEngineView>
 #include <QtWebEngine>
@@ -69,11 +70,13 @@ activate (QtApplication *self, gpointer user_data)
   int argc = 0;
   char *argv[] = { NULL };
   QApplication app (argc, argv);
-  QtWebEngine::initialize ();
+  // QtWebEngine::initialize ();
   QMainWindow main;
-  QWebEngineView view (&main);
-  main.setCentralWidget (&view);
-  view.load (QUrl ("https://gnu.org"));
+  QLabel label ("Hello GNU!", &main);
+  label.setAlignment (Qt::AlignCenter);
+  // QWebEngineView view (&main);
+  main.setCentralWidget (&label);
+  // view.load (QUrl ("https://gnu.org"));
   main.show ();
   app.exec ();
 }
@@ -113,8 +116,14 @@ qt_application_version (QtApplication *self)
   return VERSION;
 }
 
+int
+qt_major_version (void)
+{
+  return QT_VERSION_MAJOR;
+}
+
 const char *
-qt_application_qt_version (void)
+qt_version (void)
 {
   return QT_VERSION_STR;
 }
