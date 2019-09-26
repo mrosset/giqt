@@ -20,26 +20,49 @@
 
 #include "qt-application.h"
 #include "../config.h"
+#include "qt-window.h"
+#include "util.h"
 #include <QApplication>
 #include <QGridLayout>
 #include <QLabel>
 #include <QMainWindow>
+#include <QThread>
+#include <QTimer>
 #include <QWebEngineView>
-#include <QtWebEngine>
+
+int argc = 0;
+char *argv[] = { NULL };
+
+QApplication *default_app = new QApplication (argc, argv);
 
 typedef struct _QtApplicationPrivate QtApplicationPrivate;
 
 struct _QtApplicationPrivate
 {
+  QApplication *qinst;
 };
 
 struct _QtApplication
 {
-  GObject parent;
+  GApplication parent;
   QtApplicationPrivate *priv;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (QtApplication, qt_application, G_TYPE_APPLICATION);
+
+void
+DispatchOnMainThread (std::function<void()> callback)
+{
+  QTimer *timer = new QTimer ();
+  timer->moveToThread (default_app->thread ());
+  timer->setSingleShot (true);
+  QObject::connect (timer, &QTimer::timeout, [=]() {
+    callback ();
+    timer->deleteLater ();
+  });
+  QMetaObject::invokeMethod (timer, "start", Qt::QueuedConnection,
+                             Q_ARG (int, 0));
+}
 
 QtApplication *
 qt_application_new ()
@@ -52,41 +75,30 @@ qt_application_new ()
 int
 qt_application_start (QtApplication *self)
 {
-  char *argv[] = { "foo", NULL };
-  QStringList slist = QStringList ();
-  return g_application_run (G_APPLICATION (self), 1, argv);
+  char *argv[] = { NULL };
+  return g_application_run (G_APPLICATION (self), 0, argv);
 }
 
 static void
 startup (GApplication *application, gpointer user_data)
 {
   g_debug ("STARTUP");
+  DispatchOnMainThread ([=] { default_app->exec (); });
+  g_debug ("RETURN from STARTUP");
 }
 
 static void
 activate (QtApplication *self, gpointer user_data)
 {
   g_debug ("ACTIVATE");
-  int argc = 0;
-  char *argv[] = { NULL };
-  QApplication app (argc, argv);
-  // QtWebEngine::initialize ();
-  QMainWindow main;
-  QLabel label ("Hello GNU!", &main);
-  label.setAlignment (Qt::AlignCenter);
-  // QWebEngineView view (&main);
-  main.setCentralWidget (&label);
-  // view.load (QUrl ("https://gnu.org"));
-  main.show ();
-  app.exec ();
+  g_debug ("RETURN from ACTIVATE");
 }
 
 static void
 qt_application_init (QtApplication *self)
 {
-  // self->priv
-  //     = (QtApplicationPrivate *)qt_application_get_instance_private (self);
-  // self->priv->version = VERSION;
+  self->priv
+      = (QtApplicationPrivate *)qt_application_get_instance_private (self);
 
   g_signal_connect (self, "startup", G_CALLBACK (startup), NULL);
   g_signal_connect (self, "activate", G_CALLBACK (activate), NULL);
@@ -110,6 +122,12 @@ qt_application_class_init (QtApplicationClass *klass)
   object_class->finalize = qt_application_finalize;
 }
 
+gpointer
+qt_application_get_app (QtApplication *self)
+{
+  return (gpointer)self->priv->qinst;
+}
+
 const char *
 qt_application_version (QtApplication *self)
 {
@@ -126,4 +144,19 @@ const char *
 qt_version (void)
 {
   return QT_VERSION_STR;
+}
+
+void
+qt_exec ()
+{
+  qDebug () << "Current Threaad" << QThread::currentThreadId ();
+  qDebug () << "App Thread"
+            << QApplication::instance ()->thread ()->currentThreadId ();
+  qDebug () << "Bin" << qApp->thread ()->currentThreadId ();
+  // QMainWindow win;
+  // qDebug () << "Win" << win.thread ()->currentThreadId ();
+  // win.show ();
+  default_app->exec ();
+  // exit (1);
+  // qDebug () << QThread::currentThreadId ();
 }

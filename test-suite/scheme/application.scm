@@ -29,12 +29,18 @@
 
 (define-class <test-application> (<test-case>))
 
+
+(define-method (test-window (self <test-application>))
+  (let* ((app (make <qt-application> #:application-id "org.test.window"))
+         (window (make <qt-window>)))
+    (qt-window-show window)
+    (g-application-run app 0 #f)
+    ))
+
 (define-method (test-version (self <test-application>))
-  (let* ((app (make <qt-application> #:application-id "org.qt.test"))
-        (thunk (lambda _ (g-application-run app 0 #f))))
+  (let* ((app (make <qt-application> #:application-id "org.test.application")))
     (assert-equal "0.0.1-alpha" (qt-application-version app))
     (assert-equal 5 (qt-major-version))
-    (call-with-new-thread thunk)
-    (sleep 2)))
+    (assert-equal "org.test.application" (slot-ref app 'application-id))))
 
 (exit-with-summary (run-all-defined-test-cases))

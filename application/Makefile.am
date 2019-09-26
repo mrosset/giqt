@@ -21,7 +21,9 @@ AM_CPPFLAGS = -std=gnu++11 -Wall -Werror -Wno-write-strings
 libgiqt_application_LTLIBRARIES = libgiqt-application.la
 libgiqt_applicationdir = $(libexecdir)/giqt/
 
-libgiqt_application_la_SOURCES = qt-application.cpp qt-application.h
+libgiqt_application_la_SOURCES  = qt-application.cpp qt-application.h
+libgiqt_application_la_SOURCES += qt-window.cpp qt-window.h
+libgiqt_application_la_SOURCES += util.cpp util.h
 
 libgiqt_application_la_CPPFLAGS  = $(AM_CPPFLAGS)
 libgiqt_application_la_CPPFLAGS += $(GIO_CFLAGS)
@@ -48,7 +50,7 @@ INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --warn-all \
 
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
-introspection_sources = qt-application.h
+introspection_sources = qt-application.h qt-window.h
 
 Qt-1.0.gir: libgiqt-application.la Makefile.am
 Qt_1_0_INCLUDES =

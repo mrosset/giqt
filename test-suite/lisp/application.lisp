@@ -31,11 +31,13 @@
 ;; TODO: GApplication's are not trivial. Instead of bootstraping with an
 ;; Application class. Bootstrap using Windows and gtk_main?
 (let* ((qt (gir:require-namespace "Qt"))
-       (application (gir:invoke (qt "Application" 'new))))
+       (application (gir:invoke (qt "Application" 'new)))
+       (window (gir:invoke (qt "Window" 'new)))
+       )
   (is "0.0.1-alpha" (gir:invoke (application 'version)))
   (is 5 (gir:invoke (qt 'major_version)))
   (is "org.unknown" (gir:property application 'application-id))
-  (gir:invoke (application 'start))
-)
+  (gir:invoke (window 'show))
+  (gir:invoke (application 'start)))
 
 (finalize)

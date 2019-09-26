@@ -1,5 +1,5 @@
 /*
- * qt-application.h
+ * qt-window.h
  * Copyright (C) 2017-2019 Michael Rosset <mike.rosset@gmail.com>
  *
  * This file is part of giqt
@@ -18,44 +18,36 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _QT_APPLICATION_H_
-#define _QT_APPLICATION_H_
+#ifndef _QT_WINDOW_H_
+#define _QT_WINDOW_H_
 
+#include "qt-application.h"
 #include <gio/gio.h>
 #include <glib-object.h>
-
 G_BEGIN_DECLS
 
 /*
  * Type declaration.
  */
 
-#define QT_TYPE_APPLICATION qt_application_get_type ()
-G_DECLARE_FINAL_TYPE (QtApplication, qt_application, QT, APPLICATION,
-                      GApplication)
+#define QT_TYPE_WINDOW qt_window_get_type ()
+G_DECLARE_FINAL_TYPE (QtWindow, qt_window, QT, WINDOW, GObject)
 
 /*
  * Constructors
  */
 
-QtApplication *qt_application_new (void);
+QtWindow *qt_window_new ();
 
 /*
  * Method definitions.
  */
+void qt_window_set_app (QtWindow *self, QtApplication *application);
 
-int qt_application_start (QtApplication *self);
+void qt_window_show (QtWindow *self);
 
-gpointer qt_application_get_app (QtApplication *self);
-
-const char *qt_application_version (QtApplication *self);
-
-const char *qt_version (void);
-
-int qt_major_version (void);
-
-void qt_exec ();
+void qt_window_exec (QtWindow *self);
 
 G_END_DECLS
 
-#endif /* _QT_APPLICATION_H_ */
+#endif /* _QT_WINDOW_H_ */
