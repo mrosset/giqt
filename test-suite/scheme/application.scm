@@ -23,8 +23,10 @@
 
 (gi-import "Gio")
 (gi-import "Qt")
-(gi-import-by-name "Gtk" "init")
-(gi-import-by-name "Gtk" "Widget")
+
+(for-each (lambda (x)
+            (gi-import-by-name "Gtk" x))
+          '("init" "Widget" "Container" "Label"))
 
 ;; (setenv "QT_XCB_FORCE_SOFTWARE_OPENGL" "1")
 ;; (setenv "QTWEBENGINEPROCESS_PATH" "/gnu/store/829z6gb6nvlrik5xx8zxxjdxim71sc8i-qtwebengine-5.11.3/lib/qt5/libexec/QtWebEngineProcess")
@@ -34,18 +36,15 @@
 ;; FIXME: this should not be needed when using GApplication
 (gtk-init #f #f)
 
-(define-method (test-window (self <test-application>))
-  (let* ((app (make <qt-application> #:application-id "org.test.window"))
-         (window (make <qt-window>))
-         )
+(define-method (test-widget (self <test-application>))
+  (let* ((app (make <qt-application> #:application-id "org.test.widget"))
+         (window (make <qt-widget>)))
+    (assert-equal "0.0.1-alpha" (qt-application-version app))
+    (assert-equal 5 (qt-major-version))
+    (assert-equal "org.test.widget" (slot-ref app 'application-id))
+    (gtk-container-add window (make <qt-widget>))
     (gtk-widget-show-all window)
     (g-application-run app 0 #f)
     ))
-
-(define-method (test-version (self <test-application>))
-  (let* ((app (make <qt-application> #:application-id "org.test.application")))
-    (assert-equal "0.0.1-alpha" (qt-application-version app))
-    (assert-equal 5 (qt-major-version))
-    (assert-equal "org.test.application" (slot-ref app 'application-id))))
 
 (exit-with-summary (run-all-defined-test-cases))

@@ -49,11 +49,11 @@ struct _QtWindowPrivate
 
 struct _QtWindow
 {
-  GtkWidget parent;
+  GtkContainer parent;
   QtWindowPrivate *priv;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (QtWindow, qt_window, GTK_TYPE_WIDGET);
+G_DEFINE_TYPE_WITH_PRIVATE (QtWindow, qt_window, GTK_TYPE_CONTAINER);
 
 static void
 application_set_property (GObject *object, guint property_id,
@@ -96,26 +96,11 @@ qt_window_new ()
   return (QtWindow *)g_object_new (QT_TYPE_WINDOW, NULL);
 }
 
-void
+static void
 qt_window_init (QtWindow *self)
 {
-  g_debug ("INIT");
   self->priv = (QtWindowPrivate *)qt_window_get_instance_private (self);
   self->priv->qinst = new QMainWindow;
-}
-
-static void
-DispatchOnMainThread (std::function<void()> callback)
-{
-  QTimer *timer = new QTimer ();
-  timer->moveToThread (qApp->thread ());
-  timer->setSingleShot (true);
-  QObject::connect (timer, &QTimer::timeout, [=]() {
-    callback ();
-    timer->deleteLater ();
-  });
-  QMetaObject::invokeMethod (timer, "start", Qt::QueuedConnection,
-                             Q_ARG (int, 0));
 }
 
 void
@@ -128,6 +113,11 @@ qt_window_show (GtkWidget *widget)
     self->priv->qinst->setCentralWidget (label);
     self->priv->qinst->show ();
   });
+}
+
+void
+qt_window_add (GtkContainer *window, GtkWidget *child)
+{
 }
 
 static void
@@ -144,16 +134,18 @@ qt_window_class_init (QtWindowClass *klass)
   g_debug ("CLASS_INIT");
   GParamFlags rw = (GParamFlags)G_PARAM_READWRITE;
   // GParamFlags co = (GParamFlags)G_PARAM_CONSTRUCT_ONLY;
-  GtkWidgetClass *gtk_class = GTK_WIDGET_CLASS (klass);
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+  GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
 
-  G_OBJECT_CLASS (gtk_class)->set_property = application_set_property;
-  G_OBJECT_CLASS (gtk_class)->get_property = application_get_property;
+  G_OBJECT_CLASS (widget_class)->set_property = application_set_property;
+  G_OBJECT_CLASS (widget_class)->get_property = application_get_property;
 
   obj_properties[PROP_APPLICATION] = g_param_spec_pointer (
       "application", "Application", "The Application used by the window", rw);
 
-  g_object_class_install_properties (G_OBJECT_CLASS (gtk_class), N_PROPERTIES,
-                                     obj_properties);
-  G_OBJECT_CLASS (gtk_class)->finalize = qt_window_finalize;
-  gtk_class->show = qt_window_show;
+  g_object_class_install_properties (G_OBJECT_CLASS (widget_class),
+                                     N_PROPERTIES, obj_properties);
+  G_OBJECT_CLASS (widget_class)->finalize = qt_window_finalize;
+  widget_class->show = qt_window_show;
+  container_class->add = qt_window_add;
 }

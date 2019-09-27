@@ -36,10 +36,12 @@
 
 (let* ((qt (gir:require-namespace "Qt"))
        (application (gir:invoke (qt "Application" 'new)))
-       (window (gir:invoke (qt "Window" 'new))))
+       (window (gir:invoke (qt "Widget" 'new)))
+       (sub-widget (gir:invoke (qt "Widget" 'new))))
   (is "0.0.1-alpha" (gir:invoke (application 'version)))
   (is 5 (gir:invoke (qt 'major_version)))
   (is "org.unknown" (gir:property application 'application-id))
+  (gir:invoke (window 'add) sub-widget)
   (gir:connect application
                :activate (lambda (x)
                            (gir:invoke (window 'show-all))))

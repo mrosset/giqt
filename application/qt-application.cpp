@@ -50,20 +50,6 @@ struct _QtApplication
 
 G_DEFINE_TYPE_WITH_PRIVATE (QtApplication, qt_application, G_TYPE_APPLICATION);
 
-void
-DispatchOnMainThread (std::function<void()> callback)
-{
-  QTimer *timer = new QTimer ();
-  timer->moveToThread (default_app->thread ());
-  timer->setSingleShot (true);
-  QObject::connect (timer, &QTimer::timeout, [=]() {
-    callback ();
-    timer->deleteLater ();
-  });
-  QMetaObject::invokeMethod (timer, "start", Qt::QueuedConnection,
-                             Q_ARG (int, 0));
-}
-
 QtApplication *
 qt_application_new ()
 {

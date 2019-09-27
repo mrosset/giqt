@@ -1,5 +1,5 @@
 /*
- * qt-window.h
+ * qt-widget.h
  * Copyright (C) 2017-2019 Michael Rosset <mike.rosset@gmail.com>
  *
  * This file is part of giqt
@@ -18,31 +18,17 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _QT_WINDOW_H_
-#define _QT_WINDOW_H_
+#ifndef _QT_WIDGET_H_
+#define _QT_WIDGET_H_
 
 #include <gtk/gtk.h>
 G_BEGIN_DECLS
 
-/*
- * Type declaration.
- */
+#define QT_TYPE_WIDGET qt_widget_get_type ()
+G_DECLARE_FINAL_TYPE (QtWidget, qt_widget, QT, WIDGET, GtkContainer)
 
-#define QT_TYPE_WINDOW qt_window_get_type ()
-G_DECLARE_FINAL_TYPE (QtWindow, qt_window, QT, WINDOW, GtkContainer)
-
-/*
- * Constructors
- */
-
-QtWindow *qt_window_new ();
-
-/*
- * Method definitions.
- */
-
-void qt_window_show (GtkWidget *widget);
+QtWidget *qt_widget_new (void);
 
 G_END_DECLS
 
-#endif /* _QT_WINDOW_H_ */
+#endif /* _QT_WIDGET_H_ */

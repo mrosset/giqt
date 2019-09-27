@@ -22,6 +22,7 @@ libgiqt_application_LTLIBRARIES = libgiqt-application.la
 libgiqt_applicationdir = $(libexecdir)/giqt/
 
 libgiqt_application_la_SOURCES  = qt-application.cpp qt-application.h
+libgiqt_application_la_SOURCES += qt-widget.cpp qt-widget.h
 libgiqt_application_la_SOURCES += qt-window.cpp qt-window.h
 libgiqt_application_la_SOURCES += util.cpp util.h
 
@@ -54,7 +55,7 @@ INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --warn-all \
 
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
-introspection_sources = qt-application.h qt-window.h
+introspection_sources = qt-application.h qt-window.h qt-widget.h
 
 Qt-1.0.gir: libgiqt-application.la Makefile.am
 Qt_1_0_INCLUDES =
