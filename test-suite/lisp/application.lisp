@@ -28,16 +28,21 @@
 
 (plan 3)
 
-;; TODO: GApplication's are not trivial. Instead of bootstraping with an
-;; Application class. Bootstrap using Windows and gtk_main?
+
+(defvar gtk (gir:require-namespace "Gtk"))
+
+;; FIXME: this should not be needed when using GApplication
+(gir:invoke (gtk 'init) '())
+
 (let* ((qt (gir:require-namespace "Qt"))
        (application (gir:invoke (qt "Application" 'new)))
-       (window (gir:invoke (qt "Window" 'new)))
-       )
+       (window (gir:invoke (qt "Window" 'new))))
   (is "0.0.1-alpha" (gir:invoke (application 'version)))
   (is 5 (gir:invoke (qt 'major_version)))
   (is "org.unknown" (gir:property application 'application-id))
-  (gir:invoke (window 'show))
+  (gir:connect application
+               :activate (lambda (x)
+                           (gir:invoke (window 'show-all))))
   (gir:invoke (application 'start)))
 
 (finalize)

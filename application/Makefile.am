@@ -27,6 +27,7 @@ libgiqt_application_la_SOURCES += util.cpp util.h
 
 libgiqt_application_la_CPPFLAGS  = $(AM_CPPFLAGS)
 libgiqt_application_la_CPPFLAGS += $(GIO_CFLAGS)
+libgiqt_application_la_CPPFLAGS += $(GTK_CFLAGS)
 libgiqt_application_la_CPPFLAGS += $(GLIB_CFLAGS)
 libgiqt_application_la_CPPFLAGS += $(GOBJECT_CFLAGS)
 libgiqt_application_la_CPPFLAGS += $(QT_WIDGET_CFLAGS)
@@ -34,6 +35,7 @@ libgiqt_application_la_CPPFLAGS += $(QT_WEBENGINE_WIDGETS_CFLAGS)
 libgiqt_application_la_CPPFLAGS += $(QT_WEBENGINE_CFLAGS)
 
 libgiqt_application_la_LIBADD  = $(GIO_LIBS)
+libgiqt_application_la_LIBADD += $(GTK_LIBS)
 libgiqt_application_la_LIBADD += $(GLIB_LIBS)
 libgiqt_application_la_LIBADD += $(GOBJECT_LIBS)
 libgiqt_application_la_LIBADD += $(QT_WIDGET_LIBS)
@@ -46,7 +48,9 @@ libgiqt_application_la_LDFLAGS = -avoid-version -no-undefined
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --warn-all \
 	--include GObject-2.0 \
-	--include Gio-2.0
+	--include Gio-2.0 \
+	--include Gtk-3.0 \
+	--pkg=gtk+-3.0 --pkg=gio-2.0
 
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 

@@ -22,8 +22,7 @@
 #define _QT_WINDOW_H_
 
 #include "qt-application.h"
-#include <gio/gio.h>
-#include <glib-object.h>
+#include <gtk/gtk.h>
 G_BEGIN_DECLS
 
 /*
@@ -31,7 +30,7 @@ G_BEGIN_DECLS
  */
 
 #define QT_TYPE_WINDOW qt_window_get_type ()
-G_DECLARE_FINAL_TYPE (QtWindow, qt_window, QT, WINDOW, GObject)
+G_DECLARE_FINAL_TYPE (QtWindow, qt_window, QT, WINDOW, GtkWidget)
 
 /*
  * Constructors
@@ -42,11 +41,8 @@ QtWindow *qt_window_new ();
 /*
  * Method definitions.
  */
-void qt_window_set_app (QtWindow *self, QtApplication *application);
 
-void qt_window_show (QtWindow *self);
-
-void qt_window_exec (QtWindow *self);
+void qt_window_show (GtkWidget *widget);
 
 G_END_DECLS
 

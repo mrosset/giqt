@@ -23,17 +23,22 @@
 
 (gi-import "Gio")
 (gi-import "Qt")
+(gi-import-by-name "Gtk" "init")
+(gi-import-by-name "Gtk" "Widget")
 
 ;; (setenv "QT_XCB_FORCE_SOFTWARE_OPENGL" "1")
 ;; (setenv "QTWEBENGINEPROCESS_PATH" "/gnu/store/829z6gb6nvlrik5xx8zxxjdxim71sc8i-qtwebengine-5.11.3/lib/qt5/libexec/QtWebEngineProcess")
 
 (define-class <test-application> (<test-case>))
 
+;; FIXME: this should not be needed when using GApplication
+(gtk-init #f #f)
 
 (define-method (test-window (self <test-application>))
   (let* ((app (make <qt-application> #:application-id "org.test.window"))
-         (window (make <qt-window>)))
-    (qt-window-show window)
+         (window (make <qt-window>))
+         )
+    (gtk-widget-show-all window)
     (g-application-run app 0 #f)
     ))
 

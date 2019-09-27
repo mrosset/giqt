@@ -49,11 +49,11 @@ struct _QtWindowPrivate
 
 struct _QtWindow
 {
-  GObject parent;
+  GtkWidget parent;
   QtWindowPrivate *priv;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (QtWindow, qt_window, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_PRIVATE (QtWindow, qt_window, GTK_TYPE_WIDGET);
 
 static void
 application_set_property (GObject *object, guint property_id,
@@ -119,20 +119,15 @@ DispatchOnMainThread (std::function<void()> callback)
 }
 
 void
-qt_window_show (QtWindow *self)
+qt_window_show (GtkWidget *widget)
 {
+  QtWindow *self = QT_WINDOW (widget);
   DispatchOnMainThread ([=] {
     QLabel *label = new QLabel ("Hello GNU!", self->priv->qinst);
     label->setAlignment (Qt::AlignCenter);
     self->priv->qinst->setCentralWidget (label);
     self->priv->qinst->show ();
   });
-}
-
-void
-qt_window_exec (QtWindow *self)
-{
-  // self->priv->app->exec ();
 }
 
 static void
@@ -149,15 +144,16 @@ qt_window_class_init (QtWindowClass *klass)
   g_debug ("CLASS_INIT");
   GParamFlags rw = (GParamFlags)G_PARAM_READWRITE;
   // GParamFlags co = (GParamFlags)G_PARAM_CONSTRUCT_ONLY;
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GtkWidgetClass *gtk_class = GTK_WIDGET_CLASS (klass);
 
-  object_class->set_property = application_set_property;
-  object_class->get_property = application_get_property;
+  G_OBJECT_CLASS (gtk_class)->set_property = application_set_property;
+  G_OBJECT_CLASS (gtk_class)->get_property = application_get_property;
 
   obj_properties[PROP_APPLICATION] = g_param_spec_pointer (
       "application", "Application", "The Application used by the window", rw);
 
-  g_object_class_install_properties (object_class, N_PROPERTIES,
+  g_object_class_install_properties (G_OBJECT_CLASS (gtk_class), N_PROPERTIES,
                                      obj_properties);
-  object_class->finalize = qt_window_finalize;
+  G_OBJECT_CLASS (gtk_class)->finalize = qt_window_finalize;
+  gtk_class->show = qt_window_show;
 }

@@ -54,8 +54,6 @@ const char *qt_version (void);
 
 int qt_major_version (void);
 
-void qt_exec ();
-
 G_END_DECLS
 
 #endif /* _QT_APPLICATION_H_ */
