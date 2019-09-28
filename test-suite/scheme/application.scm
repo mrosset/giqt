@@ -38,11 +38,12 @@
 
 (define-method (test-widget (self <test-application>))
   (let* ((app (make <qt-application> #:application-id "org.test.widget"))
+         (label (make <qt-label> #:label "Hello GNU, from scheme!"))
          (window (make <qt-widget>)))
     (assert-equal "0.0.1-alpha" (qt-application-version app))
     (assert-equal 5 (qt-major-version))
     (assert-equal "org.test.widget" (slot-ref app 'application-id))
-    (gtk-container-add window (make <qt-widget>))
+    (gtk-container-add window label)
     (gtk-widget-show-all window)
     (g-application-run app 0 #f)
     ))

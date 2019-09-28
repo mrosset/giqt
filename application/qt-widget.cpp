@@ -53,28 +53,18 @@ qt_widget_new (void)
 }
 
 void
-qt_widget_add (GtkContainer *container, GtkWidget *child)
+qt_widget_add (GtkContainer *container, GtkWidget *widget)
 {
-  DispatchOnMainThread ([=] {
-    QtWidget *self = QT_WIDGET (container);
-    QGridLayout *layout = new QGridLayout (self->priv->qinst);
-    QT_WIDGET (child)->priv->qinst->setStyleSheet ("background-color:black;");
-    layout->addWidget (QT_WIDGET (child)->priv->qinst);
-    // QLabel *label = new QLabel ("Hello GNU!", self->priv->qinst);
-    // label->setAlignment (Qt::AlignCenter);
-    // self->priv->qinst->setCentralWidget (label);
-    // self->priv->qinst->show ();
-  });
+  QWidget *parent = QT_WIDGET (container)->priv->qinst;
+  QWidget *child = QT_WIDGET (widget)->priv->qinst;
+  DispatchOnMainThread ([=] { child->setParent (parent); });
 }
 
 void
 qt_widget_show (GtkWidget *widget)
 {
-  QtWidget *self = QT_WIDGET (widget);
   DispatchOnMainThread ([=] {
-    // QLabel *label = new QLabel ("Hello GNU!", self->priv->qinst);
-    // label->setAlignment (Qt::AlignCenter);
-    // self->priv->qinst->setCentralWidget (label);
+    QtWidget *self = QT_WIDGET (widget);
     self->priv->qinst->show ();
   });
 }
