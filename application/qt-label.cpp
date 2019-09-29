@@ -58,10 +58,8 @@ label_set_property (GObject *object, guint property_id, const GValue *value,
     {
     case PROP_LABEL:
       label = g_value_dup_string (value);
-      DispatchOnMainThread ([=] {
-        self->priv->qinst->setText (QString (label));
-        qDebug () << "Set LABEL:" << self->priv->qinst->text ();
-      });
+      DispatchOnMainThread (
+          [=] { self->priv->qinst->setText (QString (label)); });
 
       break;
     default:
