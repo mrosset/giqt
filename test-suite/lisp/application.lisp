@@ -37,6 +37,7 @@
 (let* ((qt (gir:require-namespace "Qt"))
        (application (gir:invoke (qt "Application" 'new)))
        (label (gir:invoke (qt "Label" 'new) "Hello GNU, from lisp!"))
+       (view (gir:invoke (qt "WebView" 'new)))
        (window (gir:invoke (qt "Widget" 'new)))
        )
   (is "0.0.1-alpha" (gir:invoke (application 'version)))

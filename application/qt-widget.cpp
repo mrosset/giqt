@@ -61,6 +61,19 @@ qt_widget_add (GtkContainer *container, GtkWidget *widget)
 }
 
 void
+qt_widget_fill_parent (GtkContainer *container, GtkWidget *widget)
+{
+  QWidget *parent = QT_WIDGET (container)->priv->qinst;
+  QWidget *child = QT_WIDGET (widget)->priv->qinst;
+
+  DispatchOnMainThread ([=] {
+    QGridLayout *layout = new QGridLayout (parent);
+    layout->addWidget (child, 0, 0, 1, 1);
+    layout->setMargin (0);
+  });
+}
+
+void
 qt_widget_show (GtkWidget *widget)
 {
   DispatchOnMainThread ([=] {

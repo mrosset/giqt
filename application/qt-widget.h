@@ -29,6 +29,8 @@ G_DECLARE_FINAL_TYPE (QtWidget, qt_widget, QT, WIDGET, GtkContainer)
 
 QtWidget *qt_widget_new (void);
 
+void qt_widget_fill_parent (GtkContainer *container, GtkWidget *widget);
+
 G_END_DECLS
 
 #endif /* _QT_WIDGET_H_ */
