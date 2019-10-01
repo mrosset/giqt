@@ -22,10 +22,11 @@ libgiqt_application_LTLIBRARIES = libgiqt-application.la
 libgiqt_applicationdir = $(libexecdir)/giqt/
 
 libgiqt_application_la_SOURCES  = qt-application.cpp qt-application.h
-libgiqt_application_la_SOURCES += qt-widget.cpp qt-widget.h
 libgiqt_application_la_SOURCES += qt-label.cpp qt-label.h
-libgiqt_application_la_SOURCES += qt-window.cpp qt-window.h
 libgiqt_application_la_SOURCES += qt-web-view.cpp qt-web-view.h
+libgiqt_application_la_SOURCES += qt-box.cpp qt-box.h
+libgiqt_application_la_SOURCES += qt-widget.cpp qt-widget.h
+libgiqt_application_la_SOURCES += qt-window.cpp qt-window.h
 libgiqt_application_la_SOURCES += util.cpp util.h
 
 libgiqt_application_la_CPPFLAGS  = $(AM_CPPFLAGS)
@@ -63,6 +64,7 @@ introspection_sources += qt-window.h
 introspection_sources += qt-widget.h
 introspection_sources += qt-label.h
 introspection_sources += qt-web-view.h
+introspection_sources += qt-box.h
 
 Qt-1.0.gir: libgiqt-application.la Makefile.am
 Qt_1_0_INCLUDES =

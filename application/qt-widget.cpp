@@ -20,8 +20,8 @@
 
 #include "qt-widget.h"
 #include "util.h"
-#include <QGridLayout>
 #include <QLabel>
+#include <QLayout>
 #include <QWidget>
 
 typedef struct _QtWidgetPrivate QtWidgetPrivate;
@@ -29,6 +29,7 @@ typedef struct _QtWidgetPrivate QtWidgetPrivate;
 struct _QtWidgetPrivate
 {
   QWidget *qinst;
+  QGridLayout *layout;
 };
 
 struct _QtWidget
@@ -42,8 +43,15 @@ G_DEFINE_TYPE_WITH_PRIVATE (QtWidget, qt_widget, GTK_TYPE_CONTAINER);
 void
 qt_widget_init (QtWidget *self)
 {
+  QWidget *widget = new QWidget;
+  QGridLayout *layout = new QGridLayout (widget);
+
+  layout->setRowStretch (0, 1);
+  layout->setMargin (0);
+
   self->priv = (QtWidgetPrivate *)qt_widget_get_instance_private (self);
-  self->priv->qinst = new QWidget;
+  self->priv->qinst = widget;
+  self->priv->layout = layout;
 }
 
 QtWidget *
@@ -55,9 +63,29 @@ qt_widget_new (void)
 void
 qt_widget_add (GtkContainer *container, GtkWidget *widget)
 {
-  QWidget *parent = QT_WIDGET (container)->priv->qinst;
+  g_debug ("QtWidget Add");
+  QGridLayout *layout = QT_WIDGET (container)->priv->layout;
   QWidget *child = QT_WIDGET (widget)->priv->qinst;
-  DispatchOnMainThread ([=] { child->setParent (parent); });
+
+  layout->addWidget (child);
+}
+
+void
+qt_widget_set_parent (QtWidget *widget, QtWidget *parent)
+{
+  QWidget *qparent = QT_WIDGET (parent)->priv->qinst;
+  QWidget *qchild = QT_WIDGET (widget)->priv->qinst;
+  DispatchOnMainThread ([=] { qchild->setParent (qparent); });
+}
+
+void
+qt_widget_set_layout (QtWidget *widget, gint layout)
+{
+  QWidget *qwidget = widget->priv->qinst;
+  if (layout == 0)
+    {
+      qwidget->setLayout (new QGridLayout);
+    }
 }
 
 void
@@ -85,29 +113,17 @@ qt_widget_show (GtkWidget *widget)
 static void
 qt_widget_finalize (GObject *object)
 {
-  /* TODO: Add deinitalization code here */
-
   G_OBJECT_CLASS (qt_widget_parent_class)->finalize (object);
 }
 
 static void
 qt_widget_class_init (QtWidgetClass *klass)
 {
-  g_debug ("CLASS_INIT");
-  // GParamFlags rw = (GParamFlags)G_PARAM_READWRITE;
-  // GParamFlags co = (GParamFlags)G_PARAM_CONSTRUCT_ONLY;
+  g_debug ("QT_WIDGET_CLASS_INIT");
+
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
   GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
 
-  // G_OBJECT_CLASS (widget_class)->set_property = application_set_property;
-  // G_OBJECT_CLASS (widget_class)->get_property = application_get_property;
-
-  // obj_properties[PROP_APPLICATION] = g_param_spec_pointer (
-  //     "application", "Application", "The Application used by the window",
-  //     rw);
-
-  // g_object_class_install_properties (G_OBJECT_CLASS (widget_class),
-  //                                    N_PROPERTIES, obj_properties);
   G_OBJECT_CLASS (widget_class)->finalize = qt_widget_finalize;
   widget_class->show = qt_widget_show;
   container_class->add = qt_widget_add;

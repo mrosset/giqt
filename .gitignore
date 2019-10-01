@@ -9,6 +9,7 @@ application/Qt-1.0.gir
 application/Qt-1.0.typelib
 application/libgiqt-application.la
 application/libgiqt_application_la-qt-application.lo
+application/libgiqt_application_la-qt-box.lo
 application/libgiqt_application_la-qt-label.lo
 application/libgiqt_application_la-qt-web-view.lo
 application/libgiqt_application_la-qt-widget.lo

@@ -1,5 +1,5 @@
 /*
- * qt-widget.h
+ * qt-box.h
  * Copyright (C) 2017-2019 Michael Rosset <mike.rosset@gmail.com>
  *
  * This file is part of giqt
@@ -18,23 +18,18 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _QT_WIDGET_H_
-#define _QT_WIDGET_H_
+#ifndef _QT_BOX_H_
+#define _QT_BOX_H_
 
-#include <gtk/gtk.h>
+#include "qt-widget.h"
+
 G_BEGIN_DECLS
 
-#define QT_TYPE_WIDGET qt_widget_get_type ()
-G_DECLARE_FINAL_TYPE (QtWidget, qt_widget, QT, WIDGET, GtkContainer)
+#define QT_TYPE_BOX qt_box_get_type ()
+G_DECLARE_FINAL_TYPE (QtBox, qt_box, QT, BOX, GtkContainer)
 
-QtWidget *qt_widget_new (void);
-
-void qt_widget_fill_parent (GtkContainer *container, GtkWidget *widget);
-
-void qt_widget_set_parent (QtWidget *widget, QtWidget *parent);
-
-void qt_widget_set_layout (QtWidget *widget, gint layout);
+QtBox *qt_box_new (void);
 
 G_END_DECLS
 
-#endif /* _QT_WIDGET_H_ */
+#endif /* _QT_BOX_H_ */

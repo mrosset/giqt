@@ -21,42 +21,17 @@
              (unit-test)
              (ice-9 threads))
 
-(gi-import "Gio")
 (gi-import "Qt")
-
-(for-each (lambda (x)
-            (gi-import-by-name "Gtk" x))
-          '("init" "main" "Widget" "Container" "Label"))
 
 ;; (setenv "QT_XCB_FORCE_SOFTWARE_OPENGL" "1")
 ;; (setenv "QTWEBENGINEPROCESS_PATH" "/gnu/store/829z6gb6nvlrik5xx8zxxjdxim71sc8i-qtwebengine-5.11.3/lib/qt5/libexec/QtWebEngineProcess")
 
 (define-class <test-application> (<test-case>))
 
-;; FIXME: this should not be needed when using Application
-(gtk-init #f #f)
-
 (define-method (test-widget (self <test-application>))
-  (let ((app (make <qt-application> #:application-id "org.test.widget"))
-         (label (make <qt-label> #:label "Hello GNU, from scheme!"))
-         (window (make <qt-widget>)))
+  (let ((app (make <qt-application> #:application-id "org.test.widget")))
     (assert-equal "0.0.1-alpha" (qt-application-version app))
     (assert-equal 5 (qt-major-version))
-    (assert-equal "org.test.widget" (slot-ref app 'application-id))
-    (gtk-container-add window label)
-    (gtk-widget-show-all window)
-    (g-application-run app 0 #f)
-    ))
-
-(define-method (test-web-view (self <test-application>))
-  (let ((app (make <qt-application> #:appliation-id "org.test.webview"))
-        (window (make <qt-widget>))
-        (view (make <qt-web-view>)))
-    (gtk-container-add window view)
-    (qt-widget-fill-parent window view)
-    (gtk-widget-show-all window)
-    (qt-web-view-load-uri view "https://gnu.org")
-    (g-application-run app 0 #f)
-    ))
+    (assert-equal "org.test.widget" (slot-ref app 'application-id))))
 
 (exit-with-summary (run-all-defined-test-cases))

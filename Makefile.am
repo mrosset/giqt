@@ -25,3 +25,7 @@ EXTRA_DIST = m4/introspection.m4
 
 guix: guix.scm
 	guix build -f $<
+
+run: all check
+	./pre-inst-env examples/hello.scm
+	./pre-inst-env examples/hello.lisp
