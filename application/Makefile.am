@@ -27,6 +27,7 @@ libgiqt_application_la_SOURCES += qt-web-view.cpp qt-web-view.h
 libgiqt_application_la_SOURCES += qt-box.cpp qt-box.h
 libgiqt_application_la_SOURCES += qt-widget.cpp qt-widget.h
 libgiqt_application_la_SOURCES += qt-window.cpp qt-window.h
+libgiqt_application_la_SOURCES += qt-button.cpp qt-button.h
 libgiqt_application_la_SOURCES += util.cpp util.h
 
 libgiqt_application_la_CPPFLAGS  = $(AM_CPPFLAGS)
@@ -60,6 +61,7 @@ INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
 introspection_sources  =
 introspection_sources += qt-application.h
+introspection_sources += qt-button.h
 introspection_sources += qt-window.h
 introspection_sources += qt-widget.h
 introspection_sources += qt-label.h

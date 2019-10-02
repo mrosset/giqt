@@ -34,9 +34,14 @@ app.connect('activate', () => {
     let win = new Qt.Widget();
     let label = new Qt.Label({label: "Hello GNU! from javascript"});
     let view = new Qt.WebView();
+    let button = new Qt.Button();
+    button.connect('clicked', () => {
+        label.set_text("Button Clicked!");
+    });
     view.load_uri('https://www.gnu.org');
     win.add(view);
     win.add(label);
+    win.add(button);
     win.show_all();
 });
 

@@ -1,5 +1,5 @@
 /*
- * qt-label.h
+ * qt-button.h
  * Copyright (C) 2017-2019 Michael Rosset <mike.rosset@gmail.com>
  *
  * This file is part of giqt
@@ -18,20 +18,17 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __QT_LABEL_H__
-#define __QT_LABEL_H__
+#ifndef _QT_BUTTON_H_
+#define _QT_BUTTON_H_
 
 #include <qt-widget.h>
 
 G_BEGIN_DECLS
+#define QT_TYPE_BUTTON qt_button_get_type ()
+G_DECLARE_FINAL_TYPE (QtButton, qt_button, QT, BUTTON, QtWidget)
 
-#define QT_TYPE_LABEL qt_label_get_type ()
-G_DECLARE_FINAL_TYPE (QtLabel, qt_label, QT, LABEL, QtWidget)
-
-QtLabel *qt_label_new (const char *label);
-
-void qt_label_set_text (QtLabel *label, const char *text);
+QtButton *qt_button_new (void);
 
 G_END_DECLS
 
-#endif /* __QT_LABEL_H__ */
+#endif /* _QT_BUTTON_H_ */

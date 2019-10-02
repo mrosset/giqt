@@ -32,12 +32,12 @@ run-guile: check
 run-lisp: check
 	./pre-inst-env examples/hello.lisp
 
-run-js:
+run-js: check
 	./pre-inst-env examples/hello.js
 
-run-python:
+run-python: check
 	./pre-inst-env examples/hello.py
 
-run-all: check run-guile run-python run-js run-lisp
+run-all: run-guile run-python run-js run-lisp
 
-run: check run-guile run-lisp
+run: run-guile

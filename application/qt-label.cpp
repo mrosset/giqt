@@ -102,6 +102,12 @@ qt_label_new (const char *label)
   return (QtLabel *)g_object_new (QT_TYPE_LABEL, "label", label, NULL);
 }
 
+void
+qt_label_set_text (QtLabel *label, const char *text)
+{
+  label->priv->qinst->setText (text);
+}
+
 static void
 qt_label_finalize (GObject *gobject)
 {
