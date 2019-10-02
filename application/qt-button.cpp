@@ -54,9 +54,11 @@ qt_button_new (void)
 static void
 qt_button_init (QtButton *self)
 {
-  self->priv = (QtButtonPrivate *)qt_button_get_instance_private (self);
 
   QPushButton *button = new QPushButton ("Click Here");
+
+  self->priv = (QtButtonPrivate *)qt_button_get_instance_private (self);
+
   QObject::connect (button, &QPushButton::clicked, [=]() {
     g_signal_emit (self, button_signals[CLICKED], 0);
   });
