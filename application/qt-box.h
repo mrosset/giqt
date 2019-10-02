@@ -21,12 +21,12 @@
 #ifndef _QT_BOX_H_
 #define _QT_BOX_H_
 
-#include "qt-widget.h"
+#include <qt-widget.h>
 
 G_BEGIN_DECLS
 
 #define QT_TYPE_BOX qt_box_get_type ()
-G_DECLARE_FINAL_TYPE (QtBox, qt_box, QT, BOX, GtkContainer)
+G_DECLARE_FINAL_TYPE (QtBox, qt_box, QT, BOX, QtWidget)
 
 QtBox *qt_box_new (void);
 

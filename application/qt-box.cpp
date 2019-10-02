@@ -19,16 +19,15 @@
  */
 
 #include "qt-box.h"
-#include "qt-widget.h"
 #include "util.h"
-#include <QVBoxLayout>
+#include <QLayout>
 #include <QWidget>
 
 typedef struct _QtBoxPrivate QtBoxPrivate;
 
 struct _QtBoxPrivate
 {
-  QWidget *qinst;
+  QGridLayout *qinst;
 };
 
 struct _QtBox
@@ -37,28 +36,28 @@ struct _QtBox
   QtBoxPrivate *priv;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (QtBox, qt_box, GTK_TYPE_CONTAINER);
+G_DEFINE_TYPE_WITH_PRIVATE (QtBox, qt_box, QT_TYPE_WIDGET);
 
 static void
 qt_box_init (QtBox *self)
 {
   self->priv = (QtBoxPrivate *)qt_box_get_instance_private (self);
-  self->priv->qinst = new QWidget;
+  self->priv->qinst = new QGridLayout;
 }
 
-static void
-qt_box_add (GtkContainer *container, GtkWidget *widget)
-{
-  g_debug ("QtBox Add");
-  QWidget *parent = QT_BOX (container)->priv->qinst;
-  QWidget *child = QT_BOX (widget)->priv->qinst;
-  DispatchOnMainThread ([=] { child->setParent (parent); });
-}
+// void
+// qt_box_add (GtkContainer *container, GtkWidget *widget)
+// {
+//   g_debug ("QtBox Add");
+//   QWidget *parent = QT_BOX (container)->priv->qinst;
+//   QWidget *child = QT_BOX (widget)->priv->qinst;
+//   DispatchOnMainThread ([=] { child->setParent (parent); });
+// }
 
 void
 qt_box_class_init (QtBoxClass *klass)
 {
   // GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
-  GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
-  container_class->add = qt_box_add;
+  // GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
+  // container_class->add = qt_box_add;
 }
