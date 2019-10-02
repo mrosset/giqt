@@ -26,6 +26,18 @@ EXTRA_DIST = m4/introspection.m4
 guix: guix.scm
 	guix build -f $<
 
-run: all check
+run-guile: check
 	./pre-inst-env examples/hello.scm
+
+run-lisp: check
 	./pre-inst-env examples/hello.lisp
+
+run-js:
+	./pre-inst-env examples/hello.js
+
+run-python:
+	./pre-inst-env examples/hello.py
+
+run-all: check run-guile run-python run-js run-lisp
+
+run: check run-guile run-lisp

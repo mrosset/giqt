@@ -28,9 +28,10 @@
 (let* ((qt (gir:require-namespace "Qt"))
        (application (gir:invoke (qt "Application" 'new)))
        (label (gir:invoke (qt "Label" 'new) "Hello GNU, from lisp!"))
-       ;; (view (gir:invoke (qt "WebView" 'new)))
+       (view (gir:invoke (qt "WebView" 'new)))
        (window (gir:invoke (qt "Widget" 'new)))
        )
+  (gir:invoke (window 'add) view)
   (gir:invoke (window 'add) label)
   (gir:connect application
 	       :activate (lambda (x)

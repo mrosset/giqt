@@ -30,7 +30,7 @@ window = Qt.Widget()
 view = Qt.WebView()
 label = Qt.Label(label="Hello GNU! from python")
 view.load_uri("http://www.gnu.org")
-window.add(label);
 window.add(view);
+window.add(label);
 window.show()
 app.run()

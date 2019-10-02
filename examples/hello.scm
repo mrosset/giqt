@@ -28,10 +28,11 @@
           '("Widget" "init" "main"))
 
 (gtk-init #f #f)
-(let ((app (make <qt-application>))
+(let ((app (make <qt-application> #:application-id "org.examples.scheme"))
       (window (make <qt-widget>))
       (label (make <qt-label> #:label "Hello GNU! from scheme"))
-      (view (make <qt-web-view>)))
+      (view (make <qt-web-view>))
+      )
   (gtk-container-add window view)
   (gtk-container-add window label)
   (qt-web-view-load-uri view "http://gnu.org")
