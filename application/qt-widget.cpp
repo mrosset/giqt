@@ -111,6 +111,12 @@ qt_widget_finalize (GObject *object)
 }
 
 static void
+qt_widget_grab_focus (GtkWidget *widget)
+{
+  QT_WIDGET (widget)->priv->qinst->setFocus ();
+}
+
+static void
 qt_widget_class_init (QtWidgetClass *klass)
 {
   g_debug ("QT_WIDGET_CLASS_INIT");
@@ -120,5 +126,6 @@ qt_widget_class_init (QtWidgetClass *klass)
 
   G_OBJECT_CLASS (widget_class)->finalize = qt_widget_finalize;
   widget_class->show = qt_widget_show;
+  widget_class->grab_focus = qt_widget_grab_focus;
   container_class->add = qt_widget_add;
 }

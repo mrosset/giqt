@@ -40,5 +40,6 @@
   (gtk-container-add window button)
   (gtk-container-add window line-edit)
   (qt-web-view-load-uri view "http://gnu.org")
+  (gtk-widget-grab-focus line-edit)
   (gtk-widget-show-all window)
   (g-application-run app 0 #f))
