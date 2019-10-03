@@ -23,6 +23,7 @@
 
 (defvar *gtk* (gir:require-namespace "Gtk"))
 
+;; FIXME: when using GApplication we should not need to init GTK
 (gir:invoke (*gtk* 'init) '())
 
 (let* ((qt (gir:require-namespace "Qt"))

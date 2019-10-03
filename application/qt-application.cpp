@@ -33,7 +33,7 @@
 int argc = 0;
 char *argv[] = { NULL };
 
-QApplication *default_app = new QApplication (argc, argv);
+QApplication *default_app = NULL;
 
 typedef struct _QtApplicationPrivate QtApplicationPrivate;
 
@@ -83,6 +83,10 @@ activate (QtApplication *self, gpointer user_data)
 static void
 qt_application_init (QtApplication *self)
 {
+  if (!default_app)
+    {
+      default_app = new QApplication (argc, argv);
+    }
   self->priv
       = (QtApplicationPrivate *)qt_application_get_instance_private (self);
 

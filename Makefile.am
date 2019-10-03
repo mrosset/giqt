@@ -32,6 +32,9 @@ run-guile: check
 run-lisp: check
 	./pre-inst-env examples/hello.lisp
 
+run-list-webview: check
+	./pre-inst-env examples/webview.lisp
+
 run-js: check
 	./pre-inst-env examples/hello.js
 
