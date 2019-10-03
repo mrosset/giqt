@@ -32,12 +32,6 @@ struct _QtWidgetPrivate
   QGridLayout *layout;
 };
 
-struct _QtWidget
-{
-  GtkContainer parent;
-  QtWidgetPrivate *priv;
-};
-
 G_DEFINE_TYPE_WITH_PRIVATE (QtWidget, qt_widget, GTK_TYPE_CONTAINER);
 
 void

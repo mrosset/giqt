@@ -26,13 +26,8 @@
 G_BEGIN_DECLS
 
 #define QT_TYPE_LINE_EDIT             (qt_line_edit_get_type ())
-#define QT_LINE_EDIT(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), QT_TYPE_LINE_EDIT, QtLineEdit))
-#define QT_LINE_EDIT_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), QT_TYPE_LINE_EDIT, QtLineEditClass))
-#define QT_IS_LINE_EDIT(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), QT_TYPE_LINE_EDIT))
-#define QT_IS_LINE_EDIT_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), QT_TYPE_LINE_EDIT))
-#define QT_LINE_EDIT_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), QT_TYPE_LINE_EDIT, QtLineEditClass))
+G_DECLARE_FINAL_TYPE (QtLineEdit, qt_line_edit, QT, LINE_EDIT, QtWidget)
 
-typedef struct _QtLineEditClass QtLineEditClass;
 typedef struct _QtLineEdit QtLineEdit;
 typedef struct _QtLineEditPrivate QtLineEditPrivate;
 
@@ -47,8 +42,6 @@ struct _QtLineEdit
 
   QtLineEditPrivate *priv;
 };
-
-GType qt_line_edit_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 

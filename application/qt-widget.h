@@ -25,7 +25,22 @@
 G_BEGIN_DECLS
 
 #define QT_TYPE_WIDGET qt_widget_get_type ()
-G_DECLARE_FINAL_TYPE (QtWidget, qt_widget, QT, WIDGET, GtkContainer)
+G_DECLARE_FINAL_TYPE (QtWidget, qt_widget, QT, WIDGET, GtkContainer);
+
+typedef struct _QtWidget QtWidget;
+typedef struct _QtWidgetPrivate QtWidgetPrivate;
+
+struct _QtWidgetClass
+{
+  GtkContainerClass parent_class;
+};
+
+struct _QtWidget
+{
+  GtkContainer parent_instance;
+
+  QtWidgetPrivate *priv;
+};
 
 QtWidget *qt_widget_new (void);
 

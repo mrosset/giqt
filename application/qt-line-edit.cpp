@@ -26,16 +26,14 @@ struct _QtLineEditPrivate
   QLineEdit *qinst;
 };
 
-G_DEFINE_TYPE (QtLineEdit, qt_line_edit, QT_TYPE_WIDGET);
+G_DEFINE_TYPE_WITH_PRIVATE (QtLineEdit, qt_line_edit, QT_TYPE_WIDGET);
 
 static void
 qt_line_edit_init (QtLineEdit *self)
 {
   QLineEdit *line_edit = new QLineEdit;
-  // self->priv = (QtLineEditPrivate *)qt_line_edit_get_instance_private
-  // (self);
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, QT_TYPE_LINE_EDIT,
-                                            QtLineEditPrivate);
+
+  self->priv = (QtLineEditPrivate *)qt_line_edit_get_instance_private (self);
   self->priv->qinst = line_edit;
 }
 
@@ -49,8 +47,5 @@ static void
 qt_line_edit_class_init (QtLineEditClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-  // g_type_class_add_private (klass, sizeof (QtLineEditPrivate));
-
   object_class->finalize = qt_line_edit_finalize;
 }
