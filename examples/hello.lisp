@@ -31,9 +31,11 @@
        (label (gir:invoke (qt "Label" 'new) "Hello GNU, from lisp!"))
        (button (gir:invoke (qt "Button" 'new)))
        (window (gir:invoke (qt "Widget" 'new)))
+       (edit (gir:invoke (qt "LineEdit" 'new)))
        )
   (gir:invoke (window 'add) label)
   (gir:invoke (window 'add) button)
+  (gir:invoke (window 'add) edit)
   (gir:connect button
 	       :clicked (lambda (x)
 			  (gir:invoke (label 'set-text)

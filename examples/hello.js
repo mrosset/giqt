@@ -35,6 +35,7 @@ app.connect('activate', () => {
     let label = new Qt.Label({label: "Hello GNU! from javascript"});
     let view = new Qt.WebView();
     let button = new Qt.Button();
+    let edit = new Qt.LineEdit();
     button.connect('clicked', () => {
         label.set_text("Button Clicked!");
     });
@@ -42,6 +43,7 @@ app.connect('activate', () => {
     win.add(view);
     win.add(label);
     win.add(button);
+    win.add(edit);
     win.show_all();
 });
 

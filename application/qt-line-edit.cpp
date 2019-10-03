@@ -28,6 +28,12 @@ struct _QtLineEditPrivate
 
 G_DEFINE_TYPE_WITH_PRIVATE (QtLineEdit, qt_line_edit, QT_TYPE_WIDGET);
 
+QtLineEdit *
+qt_line_edit_new ()
+{
+  return (QtLineEdit *)g_object_new (QT_TYPE_LINE_EDIT, NULL);
+}
+
 static void
 qt_line_edit_init (QtLineEdit *self)
 {

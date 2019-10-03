@@ -25,7 +25,7 @@
 
 G_BEGIN_DECLS
 
-#define QT_TYPE_LINE_EDIT             (qt_line_edit_get_type ())
+#define QT_TYPE_LINE_EDIT (qt_line_edit_get_type ())
 G_DECLARE_FINAL_TYPE (QtLineEdit, qt_line_edit, QT, LINE_EDIT, QtWidget)
 
 typedef struct _QtLineEdit QtLineEdit;
@@ -43,10 +43,8 @@ struct _QtLineEdit
   QtLineEditPrivate *priv;
 };
 
+QtLineEdit *qt_line_edit_new (void);
+
 G_END_DECLS
 
 #endif /* __QT_LINE_EDIT_H__ */
-
-// Local Variables:
-// do-clang-format: 0
-// End:
