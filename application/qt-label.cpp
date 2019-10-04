@@ -40,12 +40,6 @@ struct _QtLabelPrivate
   QLabel *qinst;
 };
 
-struct _QtLabel
-{
-  GtkContainer parent;
-  QtLabelPrivate *priv;
-};
-
 G_DEFINE_TYPE_WITH_PRIVATE (QtLabel, qt_label, QT_TYPE_WIDGET);
 
 static void
@@ -53,15 +47,13 @@ label_set_property (GObject *object, guint property_id, const GValue *value,
                     GParamSpec *pspec)
 {
   QtLabel *self = QT_LABEL (object);
-  char *label = NULL;
+
   switch (property_id)
     {
     case PROP_LABEL:
-      label = g_value_dup_string (value);
-      DispatchOnMainThread (
-          [=] { self->priv->qinst->setText (QString (label)); });
-
+      self->priv->qinst->setText (g_value_get_string (value));
       break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -78,8 +70,7 @@ label_get_property (GObject *object, guint property_id, GValue *value,
   switch (property_id)
     {
     case PROP_LABEL:
-      DispatchOnMainThread (
-          [=] { g_value_set_string (value, text.toUtf8 ().constData ()); });
+      g_value_set_string (value, text.toUtf8 ().constData ());
       break;
 
     default:
@@ -103,9 +94,15 @@ qt_label_new (const char *label)
 }
 
 void
-qt_label_set_text (QtLabel *label, const char *text)
+qt_label_set_text (QtLabel *self, const char *text)
 {
-  label->priv->qinst->setText (text);
+  self->priv->qinst->setText (text);
+}
+
+const char *
+qt_label_get_text (QtLabel *self)
+{
+  return self->priv->qinst->text ().toUtf8 ().constData ();
 }
 
 static void

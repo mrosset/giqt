@@ -28,9 +28,20 @@ G_BEGIN_DECLS
 #define QT_TYPE_LABEL qt_label_get_type ()
 G_DECLARE_FINAL_TYPE (QtLabel, qt_label, QT, LABEL, QtWidget)
 
-QtLabel *qt_label_new (const char *label);
+typedef struct _QtLabel QtLabel;
+typedef struct _QtLabelPrivate QtLabelPrivate;
+
+struct _QtLabel
+{
+  GtkLabel parent;
+  QtLabelPrivate *priv;
+};
+
+QtLabel *qt_label_new (const char *text);
 
 void qt_label_set_text (QtLabel *label, const char *text);
+
+const char *qt_label_get_text (QtLabel *self);
 
 G_END_DECLS
 

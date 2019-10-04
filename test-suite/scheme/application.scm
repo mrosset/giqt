@@ -22,16 +22,23 @@
              (ice-9 threads))
 
 (gi-import "Qt")
+(gi-import-by-name "Gtk" "init")
 
-;; (setenv "QT_XCB_FORCE_SOFTWARE_OPENGL" "1")
+(gtk-init #f #f)
+
 ;; (setenv "QTWEBENGINEPROCESS_PATH" "/gnu/store/829z6gb6nvlrik5xx8zxxjdxim71sc8i-qtwebengine-5.11.3/lib/qt5/libexec/QtWebEngineProcess")
 
 (define-class <test-application> (<test-case>))
 
-(define-method (test-widget (self <test-application>))
+(define-method (test-app (self <test-application>))
   (let ((app (make <qt-application> #:application-id "org.test.widget")))
     (assert-equal "0.0.1-alpha" (qt-application-version app))
     (assert-equal 5 (qt-major-version))
     (assert-equal "org.test.widget" (slot-ref app 'application-id))))
+
+(define-method (test-label (self <test-application>))
+  (let ((label (make <qt-label> #:label "label")))
+    (assert-equal "label" (qt-label-get-text label))
+    (assert-equal "label" (slot-ref label 'label))))
 
 (exit-with-summary (run-all-defined-test-cases))

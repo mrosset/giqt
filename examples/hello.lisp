@@ -38,6 +38,7 @@
   (gir:invoke (window 'add) edit)
   (gir:connect button
 	       :clicked (lambda (x)
+			  (gir:invoke (edit 'grab-focus))
 			  (gir:invoke (label 'set-text)
 				      "Button Clicked!")))
   (gir:connect application
