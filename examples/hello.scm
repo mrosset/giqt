@@ -39,7 +39,7 @@
   (gtk-container-add window label)
   (gtk-container-add window button)
   (gtk-container-add window line-edit)
-  (qt-web-view-load-uri view "http://gnu.org")
+  (qt-web-view-load-uri view "https://gnu.org")
   (gtk-widget-grab-focus line-edit)
   (gtk-widget-show-all window)
   (g-application-run app 0 #f))
