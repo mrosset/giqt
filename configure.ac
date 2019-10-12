@@ -33,20 +33,22 @@ AC_PROG_LN_S
 AC_PROG_INSTALL
 AC_PROG_MKDIR_P
 AC_DISABLE_STATIC
-AC_PROG_SH
 
 dnl libtool
 LT_INIT([dlopen])
 
 GUILE_PROGS
 
+PKG_CHECK_MODULES(GI_INTROSPECTION, [gobject-introspection-1.0])
+PKG_CHECK_MODULES(GOBJECT, [gobject-2.0])
 PKG_CHECK_MODULES(GLIB, [glib-2.0])
 PKG_CHECK_MODULES(GIO, [gio-2.0])
-PKG_CHECK_MODULES([GTK], [gtk+-3.0])
-PKG_CHECK_MODULES(GOBJECT, [gobject-2.0])
+PKG_CHECK_MODULES(GTK, [gtk+-3.0])
 PKG_CHECK_MODULES(QT_WIDGET, [Qt5Widgets])
 PKG_CHECK_MODULES(QT_WEBENGINE_WIDGETS, [Qt5WebEngineWidgets])
 PKG_CHECK_MODULES(QT_WEBENGINE, [Qt5WebEngine])
+PKG_CHECK_MODULES(G_GOLF, [g-golf-1.0])
+PKG_CHECK_MODULES(GUILE_LIB, [guile-lib-1.0])
 
 GOBJECT_INTROSPECTION_CHECK([1.30.0])
 
@@ -75,5 +77,5 @@ AC_MSG_NOTICE([summary of build options:
 
 AC_MSG_NOTICE([summary of pkg-config libraries:
 
-  glib:		       ${GLIB_LIBS}
+  glib:                ${GLIB_LIBS}
 ])
