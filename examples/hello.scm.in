@@ -1,4 +1,4 @@
-#!/usr/bin/guile -s
+#!@GUILE@ -s
 !#
 ;; hello.scm
 ;; Copyright (C) 2017-2019 Michael Rosset <mike.rosset@gmail.com>

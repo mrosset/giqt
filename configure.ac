@@ -33,6 +33,7 @@ AC_PROG_LN_S
 AC_PROG_INSTALL
 AC_PROG_MKDIR_P
 AC_DISABLE_STATIC
+AC_PROG_SH
 
 dnl libtool
 LT_INIT([dlopen])
@@ -57,6 +58,7 @@ application/Makefile
 ])
 
 AC_CONFIG_FILES([pre-inst-env], [chmod +x pre-inst-env])
+AC_CONFIG_FILES([examples/hello.scm], [chmod +x examples/hello.scm])
 
 AC_OUTPUT
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!@SH@
 export GUILE_AUTO_COMPILE=0
 GUILE_LOAD_PATH="@abs_top_srcdir@/scheme:$GUILE_LOAD_PATH"
 GUILE_LOAD_PATH="@abs_top_builddir@/scheme:$GUILE_LOAD_PATH"
