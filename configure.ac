@@ -39,6 +39,9 @@ LT_INIT([dlopen])
 
 GUILE_PROGS
 
+dnl python
+AM_PATH_PYTHON([3.7])
+
 PKG_CHECK_MODULES(GI_INTROSPECTION, [gobject-introspection-1.0])
 PKG_CHECK_MODULES(GOBJECT, [gobject-2.0])
 PKG_CHECK_MODULES(GLIB, [glib-2.0])
@@ -61,6 +64,7 @@ application/Makefile
 
 AC_CONFIG_FILES([pre-inst-env], [chmod +x pre-inst-env])
 AC_CONFIG_FILES([examples/hello.scm], [chmod +x examples/hello.scm])
+AC_CONFIG_FILES([examples/hello.py], [chmod +x examples/hello.py])
 
 AC_OUTPUT
 
