@@ -1,30 +1,25 @@
 ;; it's easier to use quicklisp for prototyping
 (load "~/quicklisp/setup.lisp")
-(ql:quickload :prove)
-(ql:quickload :cl-gobject-introspection)
+(require 'asdf)
+(require 'cffi)
+(require 'sb-posix)
+(require 'prove)
+
+(pushnew #p"/opt/via/lib/" cffi:*foreign-library-directories*
+         :test #'equal)
+
+(push (concatenate 'string
+                   (sb-posix:getcwd)
+                   "/cl-gobject-introspection/")
+      asdf:*central-registry*)
+
+(asdf:load-system "cl-gobject-introspection")
 
 (in-package :cl-user)
 (defpackage giqt-test
   (:use :cl
-	:prove))
+        :prove))
 (in-package :giqt-test)
-
-;; TODO: remove the need for quicklisp
-;; (require 'asdf)
-;; (require 'sb-posix)
-
-;; (asdf:load-asd (concatenate 'string
-;;                             (sb-posix:getcwd)
-;;                             "/cl-gobject-introspection/cl-gobject-introspection.asd"))
-
-;; cl-gobject-introspection requires these packages
-;;
-;; cl-alexandria
-;; cl-cffi
-;; cl-iterate
-;; cl-trivial-garbage
-
-;; (require :cl-gobject-introspection)
 
 (plan 3)
 

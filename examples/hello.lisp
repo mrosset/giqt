@@ -1,4 +1,4 @@
-#!/usr/bin/sbcl --script
+#!/opt/via/bin/sbcl --script
 
 ;; hello.lisp
 ;; Copyright (C) 2017-2019 Michael Rosset <mike.rosset@gmail.com>
@@ -18,22 +18,38 @@
 ;; You should have received a copy of the GNU General Public License along
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 (load "~/quicklisp/setup.lisp")
-(ql:quickload :cl-gobject-introspection)
+;; (ql:quickload :cl-gobject-introspection)
+(require 'asdf)
+(require 'cffi)
+(require 'sb-posix)
+
+(pushnew #p"/opt/via/lib/" cffi:*foreign-library-directories*
+	 :test #'equal)
+
+(push (concatenate 'string
+		   (sb-posix:getcwd)
+		   "/cl-gobject-introspection/")
+      asdf:*central-registry*)
+
+(asdf:load-system "cl-gobject-introspection")
 
 (defvar *gtk* (gir:require-namespace "Gtk"))
 
 ;; FIXME: when using GApplication we should not need to init GTK
-(gir:invoke (*gtk* 'init) '())
+;; (gir:invoke (*gtk* 'init) '())
 
 (let* ((qt (gir:require-namespace "Qt"))
        (application (gir:invoke (qt "Application" 'new)))
+       (view (gir:invoke (qt "WebView" 'new)))
        (label (gir:invoke (qt "Label" 'new) "Hello GNU, from lisp!"))
        (button (gir:invoke (qt "Button" 'new)))
        (window (gir:invoke (qt "Widget" 'new)))
        (edit (gir:invoke (qt "LineEdit" 'new)))
        )
-  (gir:invoke (window 'add) label)
+  (gir:invoke (window 'add) view)
+  (gir:invoke (view 'load-uri) "https://www.gnu.org")
   (gir:invoke (window 'add) button)
   (gir:invoke (window 'add) edit)
   (gir:connect button
@@ -44,5 +60,4 @@
   (gir:connect application
 	       :activate (lambda (x)
 			   (gir:invoke (window 'show-all))))
-  (gir:invoke (application 'start))
-  )
+  (gir:invoke (application 'start)))

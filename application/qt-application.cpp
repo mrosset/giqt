@@ -29,11 +29,12 @@
 #include <QThread>
 #include <QTimer>
 #include <QWebEngineView>
+#include <QtWebEngine>
 
 int argc = 0;
 char *argv[] = { NULL };
 
-QApplication *default_app = new QApplication (argc, argv);
+QApplication *default_app = NULL; // new QApplication (argc, argv);
 
 typedef struct _QtApplicationPrivate QtApplicationPrivate;
 
@@ -83,6 +84,11 @@ activate (QtApplication *self, gpointer user_data)
 static void
 qt_application_init (QtApplication *self)
 {
+  if (!default_app)
+    {
+      default_app = new QApplication (argc, argv);
+      QtWebEngine::initialize ();
+    }
   self->priv
       = (QtApplicationPrivate *)qt_application_get_instance_private (self);
 
@@ -130,19 +136,4 @@ const char *
 qt_version (void)
 {
   return QT_VERSION_STR;
-}
-
-void
-qt_exec ()
-{
-  qDebug () << "Current Threaad" << QThread::currentThreadId ();
-  qDebug () << "App Thread"
-            << QApplication::instance ()->thread ()->currentThreadId ();
-  qDebug () << "Bin" << qApp->thread ()->currentThreadId ();
-  // QMainWindow win;
-  // qDebug () << "Win" << win.thread ()->currentThreadId ();
-  // win.show ();
-  default_app->exec ();
-  // exit (1);
-  // qDebug () << QThread::currentThreadId ();
 }
