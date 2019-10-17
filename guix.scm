@@ -4,25 +4,32 @@
              (gnu packages gtk)
              (gnu packages guile)
              (gnu packages pkg-config)
+             (gnu packages python)
              (gnu packages qt)
+             (gnu packages g-golf)
+             (gnu packages guile-xyz)
              (guix build-system gnu)
              (guix git-download)
              (guix utils)
+             (guix gexp)
              (nongnu packages qt)
              (guix packages))
 
+(define %source-dir (dirname (current-filename)))
+
 (define-public giqt
-  (let ((commit "8af4618124f707558a1e00b1b7dbef044e8c4311"))
+  (let ((commit "85d04c78907d6fb9e8cbb9f56407538b33eb5717"))
     (package (name "giqt")
-             (version "0.0.1-alpha")
+             (version (git-version "0.0.1-alpha" "1" commit))
              (source (origin (method git-fetch)
                              (uri (git-reference (url "https://github.com/mrosset/giqt.git")
                                                  (commit commit)))
                              (file-name (git-file-name name version))
-                             (sha256 (base32 "03vmsdfg3yb4ns9flv2vdb903iyavzcvn641jkpcnl10hisii7jh"))))
+                             (sha256 (base32 "1bmn3swb49g6xw2zzfs00m3skmn3hv7w7ax9pc2rcqd9c411x8n2"))))
              (build-system gnu-build-system)
              (native-inputs `(("autoconf" ,autoconf)
                               ("automake" ,automake)
+                              ("python3" ,python)
                               ("pkg-config" ,pkg-config)
                               ("libtool" ,libtool)
                               ("guile" ,guile-2.2)))
@@ -30,6 +37,8 @@
                        ("gobject-introspection" ,gobject-introspection)
                        ("gtk+" ,gtk+)
                        ("qtbase" ,qtbase)
+                       ("g-golf" ,g-golf)
+                       ("guile-lib" ,guile-lib)
                        ("qtdeclarative" ,qtdeclarative)
                        ("qtwebchannel" ,qtwebchannel)
                        ("qtwebengine" ,qtwebengine)))
@@ -38,4 +47,11 @@
              (home-page "https://github.com/mrosset/giqt")
              (license license:gpl3+))))
 
-giqt
+(define giqt-local
+  (package (inherit giqt)
+           (name "giqt")
+           (version "git")
+           (source (local-file %source-dir
+                               #:recursive? #t
+                               #:select? (git-predicate %source-dir)))))
+giqt-local
