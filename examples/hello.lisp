@@ -20,7 +20,6 @@
 
 
 (load "~/quicklisp/setup.lisp")
-;; (ql:quickload :cl-gobject-introspection)
 (require 'asdf)
 (require 'cffi)
 (require 'sb-posix)
@@ -28,17 +27,9 @@
 (pushnew #p"/opt/via/lib/" cffi:*foreign-library-directories*
 	 :test #'equal)
 
-(push (concatenate 'string
-		   (sb-posix:getcwd)
-		   "/cl-gobject-introspection/")
-      asdf:*central-registry*)
-
-(asdf:load-system "cl-gobject-introspection")
+(asdf:load-system :cl-gobject-introspection)
 
 (defvar *gtk* (gir:require-namespace "Gtk"))
-
-;; FIXME: when using GApplication we should not need to init GTK
-;; (gir:invoke (*gtk* 'init) '())
 
 (let* ((qt (gir:require-namespace "Qt"))
        (application (gir:invoke (qt "Application" 'new)))

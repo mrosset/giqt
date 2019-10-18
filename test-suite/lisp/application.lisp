@@ -8,12 +8,7 @@
 (pushnew #p"/opt/via/lib/" cffi:*foreign-library-directories*
          :test #'equal)
 
-(push (concatenate 'string
-                   (sb-posix:getcwd)
-                   "/cl-gobject-introspection/")
-      asdf:*central-registry*)
-
-(asdf:load-system "cl-gobject-introspection")
+(asdf:load-system :cl-gobject-introspection)
 
 (in-package :cl-user)
 (defpackage giqt-test

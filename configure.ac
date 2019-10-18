@@ -22,11 +22,28 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIRS([m4])
 
+dnl Force the compiler to run once and do all the basic checks
+dnl if you don't, it will do the test on the first invocation
+dnl below and so your pretty section titles won't work as well
+AC_CHECK_HEADERS(iostream)
+
+dnl Small macro to print out a nice, pretty section title.
+dnl this macro can be found at https://www.edwardrosten.com/code/autoconf/ex_13/configure.ac
+define(SECTION_TITLE,
+[
+        echo >& AS_MESSAGE_FD
+        echo '   $1   ' | sed -e's/./-/g' >&AS_MESSAGE_FD
+        echo '   $1' >& AS_MESSAGE_FD
+        echo '   $1   ' | sed -e's/./-/g' >&AS_MESSAGE_FD
+])
+
 dnl automake
 AM_INIT_AUTOMAKE([-Wall gnu silent-rules color-tests serial-tests])
 AM_SILENT_RULES([yes])
 
 dnl programs
+SECTION_TITLE([Checking for programs])
+GUILE_PROGS
 AC_PROG_CXX
 AM_PROG_AR
 AC_PROG_LN_S
@@ -37,23 +54,25 @@ AC_DISABLE_STATIC
 dnl libtool
 LT_INIT([dlopen])
 
-GUILE_PROGS
-
 dnl python
 AM_PATH_PYTHON([3.7])
 
+SECTION_TITLE([Checking for GTK/GLIB libraries])
 PKG_CHECK_MODULES(GI_INTROSPECTION, [gobject-introspection-1.0])
 PKG_CHECK_MODULES(GOBJECT, [gobject-2.0])
 PKG_CHECK_MODULES(GLIB, [glib-2.0])
 PKG_CHECK_MODULES(GIO, [gio-2.0])
 PKG_CHECK_MODULES(GTK, [gtk+-3.0])
+GOBJECT_INTROSPECTION_CHECK([1.30.0])
+
+SECTION_TITLE([Checking for QT libraries])
 PKG_CHECK_MODULES(QT_WIDGET, [Qt5Widgets])
 PKG_CHECK_MODULES(QT_WEBENGINE_WIDGETS, [Qt5WebEngineWidgets])
 PKG_CHECK_MODULES(QT_WEBENGINE, [Qt5WebEngine])
+
+SECTION_TITLE([Checking for Guile libraries])
 PKG_CHECK_MODULES(G_GOLF, [g-golf-1.0])
 PKG_CHECK_MODULES(GUILE_LIB, [guile-lib-1.0])
-
-GOBJECT_INTROSPECTION_CHECK([1.30.0])
 
 AC_CONFIG_FILES([
 Makefile
