@@ -1,32 +1,38 @@
+#!/bin/sh
+## Usage: `source $0`.
+
 # disable hashing so via binaries are always used first
 set +h
 
 VIA_PREFIX="/opt/via"
-VIA_OUTPUT=/gnu/store/aqb7hh3wwqwsm839az1r1snyf2bnf6dz-via-qt-stack-x86_64-via-linux-gnu/via
+## TODO: Get VIA_OUTPUT with $(guix build -f ./guix.scm)?
+VIA_OUTPUT=/gnu/store/ym7hm9v8q6vs2qc6spfd309f70igk9b0-via-qt-stack-x86_64-via-linux-gnu/via
 
 if [[ ! -L $VIA_PREFIX ]]; then
-    echo ERROR: $VIA_PREFIX does not exist
+    echo ERROR: $VIA_PREFIX does not exist.
     echo
-    echo run the following command to create it
+    echo Run the following command to create it:
     echo
-    echo sudo ln -s $VIA_OUTPUT $VIA_PREFIX
+    echo   sudo ln -s $VIA_OUTPUT $VIA_PREFIX
     return 1
 fi
 
-if [[ $VIA_ENV ]]; then
+if [ -n "$VIA_ENV" ]; then
     echo Via environment is already setup
     return 0
 else
     export PATH="${VIA_PREFIX}/lib/ccache:${VIA_PREFIX}/bin:$PATH"
     export LDFLAGS="-Wl,-rpath -Wl,${VIA_PREFIX}/lib -Wl,--as-needed -Wl,--dynamic-linker,${VIA_PREFIX}/lib/ld-linux-x86-64.so.2"
+    export LIBRARY_PATH="$VIA_PREFIX/lib:$LIBRARY_PATH"
     export VIA_ENV=true
     echo LDFLAGS: $LDFLAGS
+    echo LIBRARY_PATH: $LIBRARY_PATH
     echo VIA_ENV: $VIA_ENV
     echo
-    echo Via enviroment is now setup
+    echo Via enviroment is now setup.
     echo
-    [[ ! -f ./configure ]] && echo Now generate configure with ./autogen.sh
-    [[ ! -f ./config.status ]] && echo And then configure with ./configure
+    [ ! -f ./configure ] && echo Now generate configure with ./autogen.sh
+    [ ! -f ./config.status ] && echo And then configure with ./configure
     return 0
 fi
 

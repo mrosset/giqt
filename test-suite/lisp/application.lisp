@@ -1,5 +1,6 @@
 ;; it's easier to use quicklisp for prototyping
-(load "~/quicklisp/setup.lisp")
+(unless (find-package :ql)
+  (load "~/quicklisp/setup.lisp"))
 (require 'asdf)
 (require 'cffi)
 (require 'sb-posix)
