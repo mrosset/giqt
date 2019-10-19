@@ -57,6 +57,15 @@ LT_INIT([dlopen])
 dnl python
 AM_PATH_PYTHON([3.7])
 
+SECTION_TITLE([Checking for SBCL program])
+AC_PATH_PROG(SBCL, sbcl, no)
+AC_SUBST(SBCL)
+
+if test "$SBCL" = "no"; then
+   AC_MSG_ERROR([program sbcl is required])
+fi
+
+
 SECTION_TITLE([Checking for GTK/GLIB libraries])
 PKG_CHECK_MODULES(GI_INTROSPECTION, [gobject-introspection-1.0])
 PKG_CHECK_MODULES(GOBJECT, [gobject-2.0])
@@ -84,6 +93,7 @@ application/Makefile
 AC_CONFIG_FILES([pre-inst-env], [chmod +x pre-inst-env])
 AC_CONFIG_FILES([examples/hello.scm], [chmod +x examples/hello.scm])
 AC_CONFIG_FILES([examples/hello.py], [chmod +x examples/hello.py])
+AC_CONFIG_FILES([examples/hello.lisp], [chmod +x examples/hello.lisp])
 
 AC_OUTPUT
 
@@ -96,6 +106,14 @@ AC_MSG_NOTICE([summary of build options:
   Compiler:             ${CXX}
   CFlags:               ${CFLAGS}
   Library types:        Shared=${enable_shared}, Static=${enable_static}
+])
+
+AC_MSG_NOTICE([summary of programs:
+
+  sbcl:                ${SBCL}
+  guile:               ${GUILE}
+  shell:               ${SHELL}
+  guild:               ${GUILD}
 ])
 
 AC_MSG_NOTICE([summary of pkg-config libraries:

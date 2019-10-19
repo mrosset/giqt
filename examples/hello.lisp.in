@@ -1,4 +1,4 @@
-#!/opt/via/bin/sbcl --script
+#!@SBCL@ --script
 
 ;; hello.lisp
 ;; Copyright (C) 2017-2019 Michael Rosset <mike.rosset@gmail.com>
@@ -52,3 +52,7 @@
 	       :activate (lambda (x)
 			   (gir:invoke (window 'show-all))))
   (gir:invoke (application 'start)))
+
+;; Local Variables:
+;; mode: lisp
+;; End:
