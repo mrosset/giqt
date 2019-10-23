@@ -1,4 +1,9 @@
-(define-module (gnu packages via))
+(define-module (giqt  packages via))
+
+(use-modules ((guix licenses) #:prefix license:)
+             (guix build-system trivial)
+             (guix download)
+             (guix packages))
 
 (define-public via
   (package (name "via")
