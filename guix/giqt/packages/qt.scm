@@ -1,4 +1,4 @@
-(define-module (nongnu packages qt))
+(define-module (giqt packages qt))
 
 (use-modules (gnu packages cups)
              (gnu packages linux)

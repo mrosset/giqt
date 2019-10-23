@@ -114,6 +114,7 @@ AC_MSG_NOTICE([summary of programs:
   guile:               ${GUILE}
   shell:               ${SHELL}
   guild:               ${GUILD}
+  python:              ${PYTHON}
 ])
 
 AC_MSG_NOTICE([summary of pkg-config libraries:
