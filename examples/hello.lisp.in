@@ -24,12 +24,16 @@
 (require 'cffi)
 (require 'sb-posix)
 
-(pushnew #p"/opt/via/lib/" cffi:*foreign-library-directories*
-	 :test #'equal)
+;; (pushnew #p"/opt/via/lib/" cffi:*foreign-library-directories*
+;;	 :test #'equal)
 
 (asdf:load-system :cl-gobject-introspection)
 
 (defvar *gtk* (gir:require-namespace "Gtk"))
+
+
+;; FIXME: gtk-init should not be needed
+(gir:invoke (*gtk* 'init) '())
 
 (let* ((qt (gir:require-namespace "Qt"))
        (application (gir:invoke (qt "Application" 'new)))

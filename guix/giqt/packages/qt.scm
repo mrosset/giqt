@@ -42,7 +42,7 @@
   (package
     (name "qt")
     (version "5.13.1")
-    (outputs '("out"))
+    (outputs '("out" "examples"))
     (source (origin
              (method url-fetch)
              (uri
@@ -59,19 +59,19 @@
              (snippet
               '(begin
                 ;; The following snippets are copied from their mondular-qt counterparts.
-                ;; (for-each
-                ;;   (lambda (dir)
-                ;;     (delete-file-recursively (string-append "qtbase/src/3rdparty/" dir)))
-                ;;   (list "double-conversion" "freetype" "harfbuzz-ng"
-                ;;         "libpng" "libjpeg" "pcre2" "sqlite" "xcb"
-                ;;         "zlib"))
-                ;; (for-each
-                ;;   (lambda (dir)
-                ;;     (delete-file-recursively dir))
-                ;;   (list "qtimageformats/src/3rdparty"
-                ;;         "qtmultimedia/examples/multimedia/spectrum/3rdparty"
-                ;;         "qtwayland/examples"
-                ;;         "qtscxml/tests/3rdparty"))
+                (for-each
+                  (lambda (dir)
+                    (delete-file-recursively (string-append "qtbase/src/3rdparty/" dir)))
+                  (list "double-conversion" "freetype" "harfbuzz-ng"
+                        "libpng" "libjpeg" "pcre2" "sqlite" "xcb"
+                        "zlib"))
+                (for-each
+                  (lambda (dir)
+                    (delete-file-recursively dir))
+                  (list "qtimageformats/src/3rdparty"
+                        "qtmultimedia/examples/multimedia/spectrum/3rdparty"
+                        "qtwayland/examples"
+                        "qtscxml/tests/3rdparty"))
                 ;; Tests depend on this example, which depends on the 3rd party code.
                 (substitute* "qtmultimedia/examples/multimedia/multimedia.pro"
                   (("spectrum") "#"))
@@ -150,9 +150,9 @@
        ("perl" ,perl)
        ("pkg-config" ,pkg-config)
        ("python" ,python-2)
-       ("re2c" ,re2c)
-       ("ruby" ,ruby)
        ("ninja" ,ninja)
+       ("ruby" ,ruby)
+       ("re2c" ,re2c)
        ("vulkan-headers" ,vulkan-headers)
        ("which" ,(@ (gnu packages base) which))))
     (arguments
@@ -168,34 +168,27 @@
              #t))
          (replace 'configure
            (lambda* (#:key outputs #:allow-other-keys)
-             (let ((out (assoc-ref outputs "out")))
+             (let ((out      (assoc-ref outputs "out"))
+                   (examples (assoc-ref outputs "examples")))
                (substitute* '("configure" "qtbase/configure")
                  (("/bin/pwd") (which "pwd")))
                (substitute* "qtbase/src/corelib/global/global.pri"
                  (("/bin/ls") (which "ls")))
-               ;; This causes make to only output directory information
                (setenv "MAKEFLAGS" "-sw")
-               ;; Only use one core when building qtwebengine. This avoids race conditions
-               (setenv "NINJAFLAGS" "-j1")
+               (setenv "PYTHONDONTWRITEBYTECODE" "1")
+               (setenv "NINJAFLAGS" "-k1")
                (invoke
                  "./configure"
-                 "-verbose"
                  "-prefix" out
                  "-docdir" (string-append out "/share/doc/qt5")
                  "-headerdir" (string-append out "/include/qt5")
                  "-archdatadir" (string-append out "/lib/qt5")
                  "-datadir" (string-append out "/share/qt5")
+                 "-examplesdir" (string-append
+                                  examples "/share/doc/qt5/examples") ; 151MiB
                  "-opensource"
                  "-confirm-license"
-                 ;; These features require higher versions of Linux than the
-                 ;; minimum version of the glibc.  See
-                 ;; src/corelib/global/minimum-linux_p.h.  By disabling these
-                 ;; features Qt5 applications can be used on the oldest
-                 ;; kernels that the glibc supports, including the RHEL6
-                 ;; (2.6.32) and RHEL7 (3.10) kernels.
-                 "-no-feature-getentropy"  ; requires Linux 3.17
-                 "-no-feature-renameat2"   ; requires Linux 3.16
-
+                 ;; "-debug"
                  ;; Do not build examples; for the time being, we
                  ;; prefer to save the space and build time.
                  "-no-compile-examples"
@@ -209,6 +202,7 @@
                  "-openssl-linked"
                  ;; explicitly link with dbus instead of dlopening it
                  "-dbus-linked"
+                 ;; "-no-webengine-pulseaudio"
                  ;; don't use the precompiled headers
                  ;; "-no-pch"
                  ;; drop special machine instructions not supported
@@ -219,7 +213,8 @@
                        '()
                        '("-no-sse2"))
                  "-no-mips_dsp"
-                 "-no-mips_dspr2")))))))
+                 "-no-mips_dspr2")
+               ))))))
       (native-search-paths
        (list (search-path-specification
               (variable "QMAKEPATH")
@@ -245,4 +240,4 @@
     ;; Qt 4: 'QBasicAtomicPointer' leads to build failures on MIPS;
     ;; see <http://hydra.gnu.org/build/112828>.
     ;; Qt 5: assembler error; see <http://hydra.gnu.org/build/112526>.
-      (supported-systems (delete "mips64el-linux" %supported-systems))))
+    (supported-systems (delete "mips64el-linux" %supported-systems))))

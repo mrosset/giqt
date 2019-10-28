@@ -27,7 +27,9 @@
             (gi-import-by-name "Gtk" x))
           '("Widget" "init" "main"))
 
+;; FIXME: gtk-init should not be needed
 (gtk-init #f #f)
+
 (let ((app (make <qt-application> #:application-id "org.examples.scheme"))
       (window (make <qt-widget>))
       (line-edit (make <qt-line-edit>))

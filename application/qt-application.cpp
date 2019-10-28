@@ -81,6 +81,8 @@ activate (QtApplication *self, gpointer user_data)
   g_debug ("RETURN from ACTIVATE");
 }
 
+#include <QWebEngineView>
+
 static void
 qt_application_init (QtApplication *self)
 {
@@ -124,6 +126,22 @@ const char *
 qt_application_version (QtApplication *self)
 {
   return VERSION;
+}
+
+void
+qt_application_cpp_test (void)
+{
+  if (!default_app)
+    {
+      default_app = new QApplication (argc, argv);
+      QtWebEngine::initialize ();
+    }
+  QMainWindow window;
+  window.show ();
+  QWebEngineView view (&window);
+  window.setCentralWidget (&view);
+  view.load (QUrl ("http://gnu.org"));
+  default_app->exec ();
 }
 
 int

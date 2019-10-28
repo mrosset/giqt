@@ -26,8 +26,6 @@
 
 (gtk-init #f #f)
 
-;; (setenv "QTWEBENGINEPROCESS_PATH" "/gnu/store/829z6gb6nvlrik5xx8zxxjdxim71sc8i-qtwebengine-5.11.3/lib/qt5/libexec/QtWebEngineProcess")
-
 (define-class <test-application> (<test-case>))
 
 (define-method (test-app (self <test-application>))

@@ -52,6 +52,8 @@ const char *qt_application_version (QtApplication *self);
 
 const char *qt_version (void);
 
+void qt_application_cpp_test (void);
+
 int qt_major_version (void);
 
 G_END_DECLS

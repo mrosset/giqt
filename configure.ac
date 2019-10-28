@@ -65,6 +65,13 @@ if test "$SBCL" = "no"; then
    AC_MSG_ERROR([program sbcl is required])
 fi
 
+SECTION_TITLE([Checking for GJS program])
+AC_PATH_PROG(GJS, gjs-console, no)
+AC_SUBST(GJS)
+
+if test "GJS" = "no"; then
+   AC_MSG_ERROR([program gjs-console is required])
+fi
 
 SECTION_TITLE([Checking for GTK/GLIB libraries])
 PKG_CHECK_MODULES(GI_INTROSPECTION, [gobject-introspection-1.0])
@@ -94,6 +101,7 @@ AC_CONFIG_FILES([pre-inst-env], [chmod +x pre-inst-env])
 AC_CONFIG_FILES([examples/hello.scm], [chmod +x examples/hello.scm])
 AC_CONFIG_FILES([examples/hello.py], [chmod +x examples/hello.py])
 AC_CONFIG_FILES([examples/hello.lisp], [chmod +x examples/hello.lisp])
+AC_CONFIG_FILES([examples/hello.js], [chmod +x examples/hello.js])
 
 AC_OUTPUT
 
@@ -120,4 +128,5 @@ AC_MSG_NOTICE([summary of programs:
 AC_MSG_NOTICE([summary of pkg-config libraries:
 
   glib:                ${GLIB_LIBS}
+  qtwidgets:           ${QT_WIDGET_LIBS}
 ])

@@ -1,4 +1,4 @@
-#!/usr/bin/env gjs-console
+#!@GJS@
 
 // hello.js
 // Copyright (C) 2017-2019 Michael Rosset <mike.rosset@gmail.com>
