@@ -43,5 +43,7 @@
   (gtk-container-add window line-edit)
   (qt-web-view-load-uri view "https://gnu.org")
   (gtk-widget-grab-focus line-edit)
-  (gtk-widget-show-all window)
+  (g-idle-add (lambda ()
+                (gtk-widget-show-all window)
+                #f))
   (g-application-run app 0 #f))

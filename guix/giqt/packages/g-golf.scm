@@ -27,7 +27,7 @@
                              (base32
                               "0rixv4c301djr0d0cnsxs8c1wjndi6bf9vi5axz6mwjkv80cmfcv")))))))
 
-    (let ((commit "4beaad6d2c1ea63bf2b832a47bd91b34dfdf693a"))
+    (let ((commit "dca3efce1d8e428615dba6ad24951059d5cfd58f"))
       (package
         (name "g-golf")
         (version (git-version "1" "1" commit))
@@ -39,7 +39,7 @@
                   (file-name (git-file-name name version))
                   (sha256
                    (base32
-                    "0q8nyncf2lmhl1m1skyv6phryp3rpkb5fxxy4r7fslq480x689yj"))))
+                    "1zg0scz9fj792rcyyza85mcm3a8hrbxfgb0sbmrmqhc83q095sc5"))))
         (build-system gnu-build-system)
         (native-inputs
          `(("autoconf" ,autoconf)
