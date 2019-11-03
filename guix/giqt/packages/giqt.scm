@@ -56,17 +56,17 @@
                        ("nss-certs" ,nss-certs)
                        ("qt" ,qt)))
              ;; FIXME: This hack allows qt to find nss libraries and giqt to find g-golf libraries.
-             (native-search-paths
-              (list (search-path-specification
-                     (file-type 'directory)
-                     (separator ":")
-                     (variable "LD_LIBRARY_PATH")
-                     (files '("lib")))
-                    (search-path-specification
-                     (file-type 'directory)
-                     (separator ":")
-                     (variable "LD_LIBRARY_PATH")
-                     (files '("lib/nss")))))
+             ;; (native-search-paths
+             ;;  (list (search-path-specification
+             ;;         (file-type 'directory)
+             ;;         (separator ":")
+             ;;         (variable "LD_LIBRARY_PATH")
+             ;;         (files '("lib")))
+             ;;        (search-path-specification
+             ;;         (file-type 'directory)
+             ;;         (separator ":")
+             ;;         (variable "LD_LIBRARY_PATH")
+             ;;         (files '("lib/nss")))))
              (synopsis "GObject bindings for QT")
              (description "GIQT allows creating QT programs with the same programming interfaces as GTK")
              (home-page "https://github.com/mrosset/giqt")
