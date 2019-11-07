@@ -16,18 +16,46 @@
 ## You should have received a copy of the GNU General Public License along
 ## with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+AUTOMAKE_OPTIONS = gnu
 
-ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+bin_SCRIPTS = hello.scm hello.lisp hello.js hello.py
 
-SUBDIRS = application test-suite/scheme test-suite/lisp examples
+CLEANFILES = $(bin_SCRIPTS)
 
-EXTRA_DIST = m4/introspection.m4
+do_sed = sed -e 's,[@]GUILE[@],$(GUILE),g'	\
+		-e 's,[@]LIBDIR[@],$(libdir),g' \
+		-e 's,[@]SBCL[@],$(SBCL),g' \
+		-e 's,[@]GJS[@],$(GJS),g' \
+		-e 's,[@]PYTHON[@],$(PYTHON),g' \
+		-e 's,[@]CCACHEDIR[@],$(ccachedir),g'
 
-guix: guix.scm
-	guix build -f $<
+do_subst = $(do_sed) < "$(srcdir)/$<" > "$@"; chmod +x "$@"
 
-run-guile run-lisp run-js run-python: check
-	$(MAKE) -C examples $@
+run_example = $(top_builddir)/pre-inst-env $(top_builddir)/examples/$<
+
+hello.scm: hello.scm.in Makefile
+	$(do_subst)
+
+hello.js: hello.js.in Makefile
+	$(do_subst)
+
+hello.lisp: hello.lisp.in Makefile
+	$(do_subst)
+
+hello.py: hello.py.in Makefile
+	$(do_subst)
+
+run-guile: hello.scm
+	$(run_example)
+
+run-lisp: hello.lisp
+	$(run_example)
+
+run-js: hello.js
+	$(run_example)
+
+run-python: hello.py
+	$(run_example)
 
 run-all: run-guile run-python run-js run-lisp
 

@@ -95,13 +95,10 @@ Makefile
 test-suite/scheme/Makefile
 test-suite/lisp/Makefile
 application/Makefile
+examples/Makefile
 ])
 
 AC_CONFIG_FILES([pre-inst-env], [chmod +x pre-inst-env])
-AC_CONFIG_FILES([examples/hello.scm], [chmod +x examples/hello.scm])
-AC_CONFIG_FILES([examples/hello.py], [chmod +x examples/hello.py])
-AC_CONFIG_FILES([examples/hello.lisp], [chmod +x examples/hello.lisp])
-AC_CONFIG_FILES([examples/hello.js], [chmod +x examples/hello.js])
 
 AC_OUTPUT
 

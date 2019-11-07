@@ -1,4 +1,4 @@
-(define-module (giqt  packages via))
+(define-module (giqt packages via))
 
 (use-modules ((guix licenses) #:prefix license:)
              (guix build-system trivial)
