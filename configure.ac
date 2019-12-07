@@ -120,6 +120,7 @@ AC_MSG_NOTICE([summary of programs:
   shell:               ${SHELL}
   guild:               ${GUILD}
   python:              ${PYTHON}
+  gjs-console:         ${GJS}
 ])
 
 AC_MSG_NOTICE([summary of pkg-config libraries:
