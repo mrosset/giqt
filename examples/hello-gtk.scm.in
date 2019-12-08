@@ -1,0 +1,38 @@
+#!@GUILE@ -s
+!#
+;; hello.scm
+;; Copyright (C) 2017-2019 Michael Rosset <mike.rosset@gmail.com>
+
+;; This file is part of giqt
+
+;; giqt is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the
+;; Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; giqt is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+;; See the GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License along
+;; with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+(use-modules (g-golf))
+
+(gi-import "WebKit2")
+
+(for-each (lambda (x)
+            (gi-import-by-name "Gtk" x))
+          '("Window" "Box" "Application" "Widget" "init" "main"))
+
+(gtk-init #f #f)
+
+(let* ((window (make <gtk-window>))
+      (box (make <gtk-box>))
+      (view (make <webkit-web-view>)))
+  (webkit-web-view-load-uri view "http://gnu.org")
+  (gtk-box-pack-start box view #t #t 0)
+  (gtk-container-add window box)
+  (gtk-widget-show-all window)
+  (gtk-main))

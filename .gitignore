@@ -18,10 +18,10 @@ config.h.in~
 config.log
 config.status
 configure
-examples/hello.js
-examples/hello.lisp
-examples/hello.scm
-examples/hello.py
+examples/*.js
+examples/*.lisp
+examples/*.scm
+examples/*.py
 libtool
 m4/
 pre-inst-env

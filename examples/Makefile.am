@@ -36,6 +36,9 @@ run_example = $(top_builddir)/pre-inst-env $(top_builddir)/examples/$<
 hello.scm: hello.scm.in Makefile
 	$(do_subst)
 
+hello-gtk.scm: hello-gtk.scm.in Makefile
+	$(do_subst)
+
 hello.js: hello.js.in Makefile
 	$(do_subst)
 
@@ -46,6 +49,9 @@ hello.py: hello.py.in Makefile
 	$(do_subst)
 
 run-guile: hello.scm
+	$(run_example)
+
+run-guile-gtk: hello-gtk.scm
 	$(run_example)
 
 run-lisp: hello.lisp

@@ -26,7 +26,7 @@ EXTRA_DIST = m4/introspection.m4
 guix: guix.scm
 	guix build -f $<
 
-run-guile run-lisp run-js run-python: check
+run-guile run-guile-gtk run-lisp run-js run-python: check
 	$(MAKE) -C examples $@
 
 run-all: run-guile run-python run-js run-lisp
