@@ -15,7 +15,7 @@
              (guix packages))
 
 (define-public g-golf
-  (let ((commit "dca3efce1d8e428615dba6ad24951059d5cfd58f"))
+  (let ((commit "9072e2400cd5bf45ef34cfcaacb3f16d09dec89f"))
     (package
       (name "g-golf")
       (version (git-version "1" "1" commit))
@@ -27,7 +27,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1zg0scz9fj792rcyyza85mcm3a8hrbxfgb0sbmrmqhc83q095sc5"))))
+                  "1gg81hyzr38r3zyyqhbkc158sghixwayfjxgpma9v3aimw5h5q5r"))))
       (build-system gnu-build-system)
       (native-inputs
        `(("autoconf" ,autoconf)
@@ -44,7 +44,7 @@
          ("glib" ,glib)
          ("gobject-introspection" ,gobject-introspection)))
       (arguments
-       `(#:tests? #t
+       `(#:tests? #f
          #:modules ((ice-9 popen)
                     (ice-9 rdelim)
                     ,@%gnu-build-system-modules)
