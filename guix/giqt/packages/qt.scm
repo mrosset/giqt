@@ -131,7 +131,6 @@
        ("nss" ,nss)
        ("openssl" ,openssl)
        ("postgresql" ,postgresql)
-       ("pulseaudio" ,pulseaudio)
        ("pcre2" ,pcre2)
        ("sqlite" ,sqlite-with-column-metadata)
        ("udev" ,eudev)
