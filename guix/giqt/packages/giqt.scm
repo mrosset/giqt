@@ -21,14 +21,14 @@
              (guix utils))
 
 (define-public giqt
-  (let ((commit "8af4618124f707558a1e00b1b7dbef044e8c4311"))
+  (let ((commit "4856f48ef34dffc5cff2deaa623c8417ef77f972"))
     (package (name "giqt")
-             (version "0.0.1-alpha")
+             (version (git-version "0.0.1-alpha" "53" commit))
              (source (origin (method git-fetch)
                              (uri (git-reference (url "https://github.com/mrosset/giqt.git")
                                                  (commit commit)))
                              (file-name (git-file-name name version))
-                             (sha256 (base32 "03vmsdfg3yb4ns9flv2vdb903iyavzcvn641jkpcnl10hisii7jh"))))
+                             (sha256 (base32 "1dvavqwgzlavn2lc8yg9crmbr1vqak5wfz8xywq96c5if274caw7"))))
              (build-system gnu-build-system)
              (arguments
               `(#:phases
@@ -53,8 +53,8 @@
                        ;; FIXME:
                        ("nss" ,nss)
                        ("gjs" ,gjs)
-                       ("nss-certs" ,nss-certs)
-                       ("qt" ,qt)))
+                       ("nss-certs" ,nss-certs)))
+             (propagated-inputs `(("qt", qt)))
              ;; FIXME: This hack allows qt to find nss libraries and giqt to find g-golf libraries.
              ;; (native-search-paths
              ;;  (list (search-path-specification
