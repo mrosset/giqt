@@ -15,7 +15,7 @@
              (guix packages))
 
 (define-public g-golf
-  (let ((commit "9072e2400cd5bf45ef34cfcaacb3f16d09dec89f"))
+  (let ((commit "6d80583304c1f6d348f9b18c4488bc5fd0a3868f"))
     (package
       (name "g-golf")
       (version (git-version "1" "1" commit))

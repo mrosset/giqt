@@ -1,0 +1,85 @@
+#!@SBCL@ --script
+
+;; hello.lisp
+;; Copyright (C) 2017-2019 Michael Rosset <mike.rosset@gmail.com>
+
+;; This file is part of giqt
+
+;; giqt is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the
+;; Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; giqt is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+;; See the GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License along
+;; with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+(load "~/quicklisp/setup.lisp")
+(require 'asdf)
+(require 'cffi)
+(require 'sb-posix)
+
+;; (pushnew #p"/opt/via/lib/" cffi:*foreign-library-directories*
+;;	 :test #'equal)
+
+(asdf:load-system :cl-gobject-introspection)
+
+(defvar *gtk* (gir:require-namespace "Gtk"))
+(defvar *gio* (gir:ffi "Gio"))
+
+;; FIXME: use gtk-application with activate signal instead of gtk_main
+(gir:invoke (*gtk* 'init) nil)
+
+
+(defvar *result* nil)
+(defvar *callback-view* nil)
+(defvar *callback-label* nil)
+
+(cffi:defcallback javascript-result-callback :void ((gobject :pointer)
+						    (gasyncres :pointer)
+						    (user_data :pointer))
+  (let ((res (gir::build-object-ptr (gir:nget *gio* "AsyncResult") gasyncres)))
+    (let ((js-result (gir:invoke (*callback-view* 'run-javascript-finish)
+				 res)))
+      (setf *result* (gir:invoke (js-result 'get-js-value)))
+      )))
+
+(let* (;; (qt (gir:require-namespace "Qt"))
+       (webkit (gir:require-namespace "WebKit2"))
+       (window (gir:invoke (*gtk* "Window" 'new) (gir:nget *gtk* "WindowType" :toplevel)))
+       (box (gir:invoke (*gtk* "Box" 'new)
+			(gir:nget *gtk* "Orientation" :vertical)
+			0))
+       (view (gir:invoke (webkit "WebView" 'new) ))
+       (label (gir:invoke (*gtk* "Label" 'new) "Hello GNU, from lisp!"))
+       (button (gir:invoke (*gtk* "Button" 'new_with_label) "invoke JavaScript")))
+  (gir:invoke (view 'load_uri) "https://gnu.org")
+  (gir:invoke (box 'pack-start) view t t 0)
+  (gir:invoke (box 'add) label)
+  (gir:invoke (box 'add) button)
+  (gir:invoke (window 'add) box)
+  (gir:invoke (view 'load-uri) "https://www.gnu.org")
+  (gir:connect button
+	       :clicked (lambda (x)
+			  (gir:invoke (label 'set-text)
+				      "invoking JavaScript")
+			  (setf *callback-view* view)
+			  (setf *callback-label* label)
+			  (gir:invoke (view 'run_javascript) "document.title;"
+				      (cffi:null-pointer)
+				      (cffi:get-callback 'javascript-result-callback)
+				      (cffi:null-pointer))))
+  (gir:connect window
+	       :destroy (lambda (x)
+			  (gir:invoke (*gtk* 'main_quit))))
+  (gir:invoke (window 'show-all))
+  (gir:invoke (*gtk* 'main)))
+
+;; Local Variables:
+;; mode: lisp
+;; End:

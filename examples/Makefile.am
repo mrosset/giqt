@@ -45,6 +45,9 @@ hello.js: hello.js.in Makefile
 hello.lisp: hello.lisp.in Makefile
 	$(do_subst)
 
+hello-gtk.lisp: hello-gtk.lisp.in Makefile
+	$(do_subst)
+
 hello.py: hello.py.in Makefile
 	$(do_subst)
 
@@ -55,6 +58,9 @@ run-guile-gtk: hello-gtk.scm
 	$(run_example)
 
 run-lisp: hello.lisp
+	$(run_example)
+
+run-lisp-gtk: hello-gtk.lisp
 	$(run_example)
 
 run-js: hello.js

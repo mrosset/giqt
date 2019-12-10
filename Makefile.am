@@ -23,10 +23,14 @@ SUBDIRS = application test-suite/scheme test-suite/lisp examples
 
 EXTRA_DIST = m4/introspection.m4
 
+EXAMPLES  = run-guile run-guile-gtk
+EXAMPLES += run-lisp run-lisp-gtk
+EXAMPLES += run-js run-python
+
 guix: guix.scm
 	guix build -f $<
 
-run-guile run-guile-gtk run-lisp run-js run-python: check
+$(EXAMPLES): all
 	$(MAKE) -C examples $@
 
 run-all: run-guile run-python run-js run-lisp
