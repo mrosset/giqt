@@ -1,20 +1,18 @@
 ;; it's easier to use quicklisp for prototyping
-(unless (find-package :ql)
-  (load "~/quicklisp/setup.lisp"))
+;; (unless (find-package :ql)
+;;   (load "~/quicklisp/setup.lisp"))
 (require 'asdf)
-(require 'cffi)
-(require 'sb-posix)
-(require 'prove)
 
-(pushnew #p"/opt/via/lib/" cffi:*foreign-library-directories*
-         :test #'equal)
+;; (pushnew #p"/opt/via/lib/" cffi:*foreign-library-directories*
+;;	 :test #'equal)
 
+(asdf:load-system :prove)
 (asdf:load-system :cl-gobject-introspection)
 
 (in-package :cl-user)
 (defpackage giqt-test
   (:use :cl
-        :prove))
+	:prove))
 (in-package :giqt-test)
 
 (plan 3)

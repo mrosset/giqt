@@ -19,14 +19,14 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-(load "~/quicklisp/setup.lisp")
+;; (load "~/quicklisp/setup.lisp")
 (require 'asdf)
-(require 'cffi)
 (require 'sb-posix)
 
 ;; (pushnew #p"/opt/via/lib/" cffi:*foreign-library-directories*
 ;;	 :test #'equal)
 
+(asdf:load-system :prove)
 (asdf:load-system :cl-gobject-introspection)
 
 (defvar *gtk* (gir:require-namespace "Gtk"))

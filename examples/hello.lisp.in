@@ -19,18 +19,16 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-(load "~/quicklisp/setup.lisp")
+;; (load "~/quicklisp/setup.lisp")
 (require 'asdf)
-(require 'cffi)
-(require 'sb-posix)
 
 ;; (pushnew #p"/opt/via/lib/" cffi:*foreign-library-directories*
 ;;	 :test #'equal)
 
+(asdf:load-system :prove)
 (asdf:load-system :cl-gobject-introspection)
 
 (defvar *gtk* (gir:require-namespace "Gtk"))
-
 
 ;; FIXME: gtk-init should not be needed
 (gir:invoke (*gtk* 'init) '())
@@ -41,8 +39,7 @@
        (label (gir:invoke (qt "Label" 'new) "Hello GNU, from lisp!"))
        (button (gir:invoke (qt "Button" 'new)))
        (window (gir:invoke (qt "Widget" 'new)))
-       (edit (gir:invoke (qt "LineEdit" 'new)))
-       )
+       (edit (gir:invoke (qt "LineEdit" 'new))))
   (gir:invoke (window 'add) view)
   (gir:invoke (view 'load-uri) "https://www.gnu.org")
   (gir:invoke (window 'add) button)

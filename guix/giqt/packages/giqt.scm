@@ -12,6 +12,7 @@
              (gnu packages guile-xyz)
              (gnu packages linux)
              (gnu packages lisp)
+             (gnu packages lisp-xyz)
              (gnu packages nss)
              (gnu packages pkg-config)
              (gnu packages python)
@@ -53,7 +54,9 @@
                        ;; FIXME:
                        ("nss" ,nss)
                        ("gjs" ,gjs)
-                       ("nss-certs" ,nss-certs)))
+                       ("nss-certs" ,nss-certs)
+                       ("sbcl-prove" ,sbcl-prove)
+                       ("sbcl-cl-gobject-introspection" ,sbcl-cl-gobject-introspection)))
              (propagated-inputs `(("qt", qt)))
              ;; FIXME: This hack allows qt to find nss libraries and giqt to find g-golf libraries.
              ;; (native-search-paths
