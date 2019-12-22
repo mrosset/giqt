@@ -19,7 +19,15 @@
 
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
-SUBDIRS = application test-suite/scheme test-suite/lisp examples
+SUBDIRS = application examples
+
+if ENABLE_GUILE
+SUBDIRS += test-suite/scheme
+endif
+
+if ENABLE_SBCL
+SUBDIRS += test-suite/lisp
+endif
 
 EXTRA_DIST = m4/introspection.m4
 

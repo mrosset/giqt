@@ -37,13 +37,16 @@ define(SECTION_TITLE,
         echo '   $1   ' | sed -e's/./-/g' >&AS_MESSAGE_FD
 ])
 
+dnl optional enabled
+AC_ARG_ENABLE([guile], AS_HELP_STRING([--disable-guile], [Disable guile tests]))
+AC_ARG_ENABLE([sbcl], AS_HELP_STRING([--disable-sbcl], [Disable sbcl tests]))
+
 dnl automake
 AM_INIT_AUTOMAKE([-Wall gnu silent-rules color-tests serial-tests])
 AM_SILENT_RULES([yes])
 
 dnl programs
 SECTION_TITLE([Checking for programs])
-GUILE_PROGS
 AC_PROG_CXX
 AM_PROG_AR
 AC_PROG_LN_S
@@ -51,19 +54,32 @@ AC_PROG_INSTALL
 AC_PROG_MKDIR_P
 AC_DISABLE_STATIC
 
+dnl guile
+AS_IF([test "x$enable_guile" != "xno"], [
+SECTION_TITLE([Checking for Guile libraries])
+PKG_CHECK_MODULES(G_GOLF, [g-golf-1.0])
+PKG_CHECK_MODULES(GUILE_LIB, [guile-lib-1.0])
+GUILE_PROGS
+])
+
+dnl sbcl
+AS_IF([test "x$enable_sbcl" != "xno"], [
+SECTION_TITLE([Checking for SBCL program])
+AC_PATH_PROG(SBCL, sbcl, no)
+AC_SUBST(SBCL)
+if test "$SBCL" = "no"; then
+   AC_MSG_ERROR([program sbcl is required])
+fi
+])
+
+AM_CONDITIONAL([ENABLE_GUILE], [test x$enable_guile != xno])
+AM_CONDITIONAL([ENABLE_SBCL], [test x$enable_sbcl != xno])
+
 dnl libtool
 LT_INIT([dlopen])
 
 dnl python
 AM_PATH_PYTHON([3.7])
-
-SECTION_TITLE([Checking for SBCL program])
-AC_PATH_PROG(SBCL, sbcl, no)
-AC_SUBST(SBCL)
-
-if test "$SBCL" = "no"; then
-   AC_MSG_ERROR([program sbcl is required])
-fi
 
 SECTION_TITLE([Checking for GJS program])
 AC_PATH_PROG(GJS, gjs-console, no)
@@ -85,10 +101,6 @@ SECTION_TITLE([Checking for QT libraries])
 PKG_CHECK_MODULES(QT_WIDGET, [Qt5Widgets])
 PKG_CHECK_MODULES(QT_WEBENGINE_WIDGETS, [Qt5WebEngineWidgets])
 PKG_CHECK_MODULES(QT_WEBENGINE, [Qt5WebEngine])
-
-SECTION_TITLE([Checking for Guile libraries])
-PKG_CHECK_MODULES(G_GOLF, [g-golf-1.0])
-PKG_CHECK_MODULES(GUILE_LIB, [guile-lib-1.0])
 
 AC_CONFIG_FILES([
 Makefile
