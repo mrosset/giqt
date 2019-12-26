@@ -1,6 +1,7 @@
 (define-module (giqt packages g-golf))
 
 (use-modules ((guix licenses) #:prefix license:)
+             (guix utils)
              (gnu packages autotools)
              (gnu packages gettext)
              (gnu packages glib)
@@ -35,19 +36,16 @@
          ("texinfo" ,texinfo)
          ("gettext" ,gettext-minimal)
          ("libtool" ,libtool)
-         ("clutter" ,clutter) ;; probably want to remove this clutter?
-         ;; FIXME: clutter is only required for tests
          ("pkg-config" ,pkg-config)))
       (inputs
        `(("guile" ,guile-2.2)
          ("guile-lib" ,guile-lib)
-         ("glib" ,glib)
-         ("gobject-introspection" ,gobject-introspection)))
+         ("glib" ,glib)))
+      (propagated-inputs
+       `(("gobject-introspection" ,gobject-introspection)
+         ("clutter" ,clutter)))
       (arguments
        `(#:tests? #f
-         #:modules ((ice-9 popen)
-                    (ice-9 rdelim)
-                    ,@%gnu-build-system-modules)
          #:phases
          (modify-phases %standard-phases
            (add-before 'configure 'setenv
@@ -56,8 +54,8 @@
                #t))
            (add-before 'build 'substitute-libs
              (lambda* (#:key inputs #:allow-other-keys)
-               (let* ((get (lambda* (x #:optional (path ""))
-                             (string-append (assoc-ref inputs x) "/lib/" path)))
+               (let* ((get (lambda (key path)
+                             (string-append (assoc-ref inputs key) "/lib/" path)))
                       (gi (get "gobject-introspection" "libgirepository-1.0.so"))
                       (glib (get "glib" "libglib-2.0.so"))
                       (gobject (get "glib" "libgobject-2.0.so")))
@@ -66,29 +64,24 @@
                    (("libglib-2.0") glib)
                    (("libgobject-2.0") gobject))
                  #t)))
-           (add-after 'install 'install-guile-modules
-             (lambda* (#:key inputs outputs #:allow-other-keys)
+           (add-after 'install 'rebase-guile-modules
+             (lambda* (#:key outputs inputs #:allow-other-keys)
                (let* ((out (assoc-ref outputs "out"))
-                      (guile (assoc-ref inputs "guile"))
-                      (effective (read-line (open-pipe* OPEN_READ
-                                                        "guile" "-c"
-                                                        "(display (effective-version))")))
-                      (go-path (string-append out "/lib/guile/" effective "/site-ccache"))
-                      (scm-path (string-append out "/share/guile/site/" effective)))
-                 (mkdir-p go-path)
-                 (mkdir-p scm-path)
-                 (copy-recursively (string-append out
-                                                  "/lib/g-golf/guile/" effective "/site-ccache")
-                                   go-path)
-                 (copy-recursively (string-append out
-                                                  "/share/g-golf")
-                                   scm-path)))))))
-      ;; (native-search-paths
-      ;;  (list (search-path-specification
-      ;;         (file-type 'directory)
-      ;;         (separator ":")
-      ;;         (variable "LD_LIBRARY_PATH")
-      ;;         (files '("lib")))))
+                      (version ,(version-major+minor (package-version guile-2.2)))
+                      (init.scm (string-append out "/share/guile/g-golf/init.scm"))
+                      (init.go (string-append out "/lib/guile/"
+                                              version
+                                              "/site-ccache/g-golf/init.go")))
+                 ;; Because g-golf does not use the same prefix as guile re-base
+                 ;; sitedir and siteccachdir to match guile's site path.
+                 (rename-file (string-append out "/lib/g-golf/guile") (string-append out "/lib/guile"))
+                 (rename-file (string-append out "/share/g-golf") (string-append out "/share/guile"))
+                 ;; Substitute libg-golf with absolute library path
+                 (substitute* init.scm
+                   (("\"libg-golf\"") (format #f  "~s" (string-append out "/lib/libg-golf"))))
+                 ;; Recompile init.go with the new absolute library path
+                 (invoke "guild" "compile" init.scm "-o" init.go)
+                 #t))))))
       (home-page "https://www.gnu.org/software/g-golf/")
       (synopsis "G-Golf is a Guile Object Library for GNOME")
       (description "G-Golf low level API comprises a binding to - (most of) the
