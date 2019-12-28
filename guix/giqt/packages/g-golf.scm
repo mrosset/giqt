@@ -16,10 +16,10 @@
              (guix packages))
 
 (define-public g-golf
-  (let ((commit "14e2b1491f40fdffe22704cf2b60405d0f818818"))
+  (let ((commit "d7bee600d7cf2cbfd0972d339f04fe4c74213848"))
     (package
       (name "g-golf")
-      (version (git-version "1" "568" commit))
+      (version (git-version "1" "574" commit))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -28,7 +28,7 @@
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1bd7705mdjixr3f7yqari1h6qfsbink9pzvf95kcccc6nm80hjzf"))))
+                  "1c39iy1ckjwyiyrb9a9sll4yzp45322y9p0rb77ljns0lz3qsgll"))))
       (build-system gnu-build-system)
       (native-inputs
        `(("autoconf" ,autoconf)
@@ -40,47 +40,40 @@
       (inputs
        `(("guile" ,guile-2.2)
          ("guile-lib" ,guile-lib)
-         ("glib" ,glib)))
-      (propagated-inputs
-       `(("gobject-introspection" ,gobject-introspection)
+         ("glib" ,glib)
          ("clutter" ,clutter)))
+      (propagated-inputs
+       `(("gobject-introspection" ,gobject-introspection)))
       (arguments
        `(#:tests? #f
          #:phases
          (modify-phases %standard-phases
-           (add-before 'configure 'setenv
-             (lambda _
-               (setenv "GUILE_AUTO_COMPILE" "0")
-               #t))
-           (add-before 'build 'substitute-libs
-             (lambda* (#:key inputs #:allow-other-keys)
-               (let* ((get (lambda (key path)
-                             (string-append (assoc-ref inputs key) "/lib/" path)))
-                      (gi (get "gobject-introspection" "libgirepository-1.0.so"))
-                      (glib (get "glib" "libglib-2.0.so"))
-                      (gobject (get "glib" "libgobject-2.0.so")))
+           (add-before 'configure 'substitute-libs
+             (lambda* (#:key inputs outputs #:allow-other-keys)
+               (let* ((get (lambda (key lib)
+                             (string-append (assoc-ref inputs key) "/lib/" lib)))
+                      (libgi      (get "gobject-introspection" "libgirepository-1.0.so"))
+                      (libglib    (get "glib" "libglib-2.0.so"))
+                      (libgobject (get "glib" "libgobject-2.0.so")))
+                 (substitute* "configure"
+                   (("SITEDIR=\"\\$datadir/g-golf\"")
+                    "SITEDIR=\"$datadir/guile/site/$GUILE_EFFECTIVE_VERSION\"")
+                   (("SITECCACHEDIR=\"\\$libdir/g-golf/")
+                    "SITECCACHEDIR=\"$libdir/"))
                  (substitute* "g-golf/init.scm"
-                   (("libgirepository-1.0") gi)
-                   (("libglib-2.0") glib)
-                   (("libgobject-2.0") gobject))
-                 #t)))
-           (add-after 'install 'rebase-guile-modules
-             (lambda* (#:key outputs inputs #:allow-other-keys)
-               (let* ((out (assoc-ref outputs "out"))
-                      (version ,(version-major+minor (package-version guile-2.2)))
-                      (init.scm (string-append out "/share/guile/g-golf/init.scm"))
-                      (init.go (string-append out "/lib/guile/"
-                                              version
-                                              "/site-ccache/g-golf/init.go")))
-                 ;; Because g-golf does not use the same prefix as guile re-base
-                 ;; sitedir and siteccachdir to match guile's site path.
-                 (rename-file (string-append out "/lib/g-golf/guile") (string-append out "/lib/guile"))
-                 (rename-file (string-append out "/share/g-golf") (string-append out "/share/guile"))
-                 ;; Substitute libg-golf with absolute library path
-                 (substitute* init.scm
-                   (("\"libg-golf\"") (format #f  "~s" (string-append out "/lib/libg-golf"))))
-                 ;; Recompile init.go with the new absolute library path
-                 (invoke "guild" "compile" init.scm "-o" init.go)
+                   (("libgirepository-1.0") libgi)
+                   (("libglib-2.0") libglib)
+                   (("libgobject-2.0") libgobject)
+                   (("\\(dynamic-link \"libg-golf\"\\)")
+                    (format #f "~s"
+                            `(dynamic-link
+                              (format #f "~alibg-golf"
+                                      (if (getenv "GUILE_GGOLF_UNINSTALLED")
+                                          ""
+                                          ,(format #f "~a/lib/"
+                                                   (assoc-ref outputs "out"))))))))
+                 (setenv "GUILE_AUTO_COMPILE" "0")
+                 (setenv "GUILE_GGOLF_UNINSTALLED" "1")
                  #t))))))
       (home-page "https://www.gnu.org/software/g-golf/")
       (synopsis "G-Golf is a Guile Object Library for GNOME")
