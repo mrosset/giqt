@@ -81,13 +81,12 @@ activate (QtApplication *self, gpointer user_data)
   g_debug ("RETURN from ACTIVATE");
 }
 
-#include <QWebEngineView>
-
 static void
 qt_application_init (QtApplication *self)
 {
   if (!default_app)
     {
+      QCoreApplication::setAttribute (Qt::AA_EnableHighDpiScaling);
       default_app = new QApplication (argc, argv);
       QtWebEngine::initialize ();
     }
