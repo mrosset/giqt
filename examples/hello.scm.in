@@ -18,32 +18,32 @@
 ;; You should have received a copy of the GNU General Public License along
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(use-modules (g-golf))
-
-(gi-import "Gio")
-(gi-import "Qt")
-
-(for-each (lambda (x)
-            (gi-import-by-name "Gtk" x))
-          '("Widget" "init" "main"))
+(eval-when (expand load eval)
+  (use-modules (g-golf))
+  (gi-import "Qt")
+  (map (match-lambda ((namespace item)
+		      (gi-import-by-name namespace item)))
+       '(("Gtk" "Widget")
+	 ("Gtk" "init")
+	 ("Gtk" "main"))))
 
 ;; FIXME: gtk-init should not be needed
-(gtk-init #f #f)
+(gtk-init 0 #f)
 
 (let ((app (make <qt-application> #:application-id "org.examples.scheme"))
       (window (make <qt-widget>))
       (line-edit (make <qt-line-edit>))
       (label (make <qt-label> #:label "Hello GNU! from scheme"))
       (view (make <qt-web-view>))
-      (button (make <qt-button>))
-      )
-  (gtk-container-add window view)
-  (gtk-container-add window label)
-  (gtk-container-add window button)
-  (gtk-container-add window line-edit)
-  (qt-web-view-load-uri view "https://gnu.org")
-  (gtk-widget-grab-focus line-edit)
+      (button (make <qt-button>)))
+
+  (add window view)
+  (add window label)
+  (add window button)
+  (add window line-edit)
+  (load-uri view "https://gnu.org")
+  (grab-focus line-edit)
   (g-idle-add (lambda ()
-                (gtk-widget-show-all window)
-                #f))
-  (g-application-run app 0 #f))
+		(gtk-widget-show-all window)
+		#f))
+  (run app 0 #f))

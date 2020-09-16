@@ -14,6 +14,8 @@ export GI_TYPELIB_PATH
 
 export LD_LIBRARY_PATH="$GUIX_ENVIRONMENT/lib:$GUIX_ENVIRONMENT/lib/nss"
 
+export QT_XCB_FORCE_SOFTWARE_OPENGL=0
+
 exec @abs_top_builddir@/libtool --mode=execute \
      -dlopen "@abs_top_builddir@/application/libgiqt-application.la"\
      "$@"

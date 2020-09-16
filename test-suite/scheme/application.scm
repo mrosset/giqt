@@ -17,14 +17,14 @@
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (use-modules (oop goops)
-             (g-golf)
-             (unit-test)
-             (ice-9 threads))
+	     (g-golf)
+	     (unit-test)
+	     (ice-9 threads))
 
 (gi-import "Qt")
 (gi-import-by-name "Gtk" "init")
 
-(gtk-init #f #f)
+(gtk-init 0 #f)
 
 (define-class <test-application> (<test-case>))
 
