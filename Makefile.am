@@ -43,4 +43,4 @@ $(EXAMPLES): all
 
 run-all: run-guile run-python run-js run-lisp
 
-run: run-guile
+run: run-guile-gtk

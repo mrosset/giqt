@@ -1,5 +1,5 @@
 /*
- * qt-web-view.h
+ * qt-widget.h
  * Copyright (C) 2017-2019 Michael Rosset <mike.rosset@gmail.com>
  *
  * This file is part of giqt
@@ -18,20 +18,40 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __QT_WEB_VIEW_H__
-#define __QT_WEB_VIEW_H__
+#ifndef _QT_PLUG_H_
+#define _QT_PLUG_H_
 
-#include <glib-object.h>
+#include <gtk/gtk.h>
+#include <qt-application.h>
 
 G_BEGIN_DECLS
 
-#define QT_TYPE_WEB_VIEW (qt_web_view_get_type ())
-G_DECLARE_FINAL_TYPE (QtWebView, qt_web_view, QT, WEB_VIEW, GObject)
+#define QT_TYPE_WIDGET qt_plug_get_type ()
+G_DECLARE_FINAL_TYPE (QtPlug, qt_plug, QT, PLUG, GtkBin);
 
-QtWebView *qt_web_view_new (const long socket_id);
+typedef struct _QtPlug QtPlug;
+typedef struct _QtPlugPrivate QtPlugPrivate;
 
-void qt_web_view_load_uri (QtWebView *self, const char *uri);
+struct _QtPlugClass
+{
+  GtkContainerClass parent_class;
+};
+
+struct _QtPlug
+{
+  GtkContainer parent_instance;
+
+  QtPlugPrivate *priv;
+};
+
+QtPlug *qt_plug_new (void);
+
+void qt_plug_fill_parent (GtkContainer *container, GtkWidget *widget);
+
+void qt_plug_set_parent (QtPlug *widget, QtPlug *parent);
+
+void qt_plug_set_layout (QtPlug *widget, gint layout);
 
 G_END_DECLS
 
-#endif /* __QT_WEB_VIEW_H__ */
+#endif /* _QT_PLUG_H_ */

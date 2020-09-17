@@ -1,5 +1,4 @@
 #! /bin/sh
-# -*- mode: scheme; coding: utf-8 -*-
 exec @GUILE@ --no-auto-compile -e main -s "$0" "$@"
 !#
 
@@ -22,34 +21,45 @@ exec @GUILE@ --no-auto-compile -e main -s "$0" "$@"
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (eval-when (expand load eval)
+  (use-modules (oop goops))
+
+  (default-duplicate-binding-handler
+    '(merge-generics replace warn-override-core warn first))
+
   (use-modules (g-golf))
-  (gi-import "WebKit2")
+
   (map (match-lambda ((namespace item)
 		      (gi-import-by-name namespace item)))
        '(("Gtk" "ApplicationWindow")
-	 ("Gtk" "Box")
+	 ("Gtk" "VBox")
+	 ("Gtk" "Label")
 	 ("Gtk" "Application")
 	 ("Gtk" "Widget")
-	 ("Gtk" "init")
-	 ("Gtk" "main"))))
+	 ("Gtk" "Socket")))
+  (gi-import "Qt"))
 
 (define (activate app)
   (let* ((window (make <gtk-application-window>
 		   #:application app))
-	 (box    (make <gtk-box>))
-	 (view   (make <webkit-web-view>)))
-    (load-uri view "http://gnu.org")
-    (pack-start box view #t #t 0)
-    (add window box)
-    (show-all window)))
+	 (vbox   (make <gtk-vbox>))
+	 (label  (make <gtk-label> #:label "Hello GNU!"))
+	 (socket (make <gtk-socket>)))
+    (pack-start vbox socket #t #t 0)
+    (pack-start vbox label #f #f 0)
+    (add window vbox)
+    (let ((view (qt-web-view-new (get-id socket))))
+      (format #t "socket-id: ~a\n" (get-id socket))
+      (load-uri view "https://gnu.org")
+      (show-all window))))
 
 (define (main args)
   (let ((app (make <gtk-application>
 	       #:application-id "org.gnu.giqt.example")))
-
-    (connect app
-	     'activate
+    (connect app 'activate
 	     (lambda (app)
 	       (activate app)))
+    (run app (length args) args)))
 
-    (run app 0 #f)))
+;; Local Variables:
+;; mode: scheme
+;; End:

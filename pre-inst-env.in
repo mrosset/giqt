@@ -7,14 +7,14 @@ GUILE_LOAD_COMPILED_PATH="@abs_top_builddir@/scheme:$GUILE_LOAD_COMPILED_PATH"
 
 GI_TYPELIB_PATH="@abs_top_builddir@/application:$GI_TYPELIB_PATH"
 
-export G_MESSAGES_DEBUG="all"
 export G_DEBUG="fatal-warnings"
 export GUILE_LOAD_COMPILED_PATH
 export GI_TYPELIB_PATH
 
 export LD_LIBRARY_PATH="$GUIX_ENVIRONMENT/lib:$GUIX_ENVIRONMENT/lib/nss"
 
-export QT_XCB_FORCE_SOFTWARE_OPENGL=0
+export QT_XCB_FORCE_SOFTWARE_OPENGL=1
+export GDK_RENDERING=image
 
 exec @abs_top_builddir@/libtool --mode=execute \
      -dlopen "@abs_top_builddir@/application/libgiqt-application.la"\

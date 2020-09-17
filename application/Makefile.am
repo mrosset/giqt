@@ -21,14 +21,16 @@ AM_CPPFLAGS = -std=gnu++11 -Wall -Werror -Wno-write-strings
 libgiqt_application_LTLIBRARIES = libgiqt-application.la
 libgiqt_applicationdir = $(libexecdir)/giqt/
 
-libgiqt_application_la_SOURCES  = qt-application.cpp qt-application.h
-libgiqt_application_la_SOURCES += qt-box.cpp qt-box.h
-libgiqt_application_la_SOURCES += qt-button.cpp qt-button.h
-libgiqt_application_la_SOURCES += qt-label.cpp qt-label.h
-libgiqt_application_la_SOURCES += qt-line-edit.cpp qt-line-edit.h
-libgiqt_application_la_SOURCES += qt-web-view.cpp qt-web-view.h
-libgiqt_application_la_SOURCES += qt-widget.cpp qt-widget.h
-libgiqt_application_la_SOURCES += qt-window.cpp qt-window.h
+# libgiqt_application_la_SOURCES  = qt-application.cpp qt-application.h
+# libgiqt_application_la_SOURCES += qt-box.cpp qt-box.h
+# libgiqt_application_la_SOURCES += qt-button.cpp qt-button.h
+# libgiqt_application_la_SOURCES += qt-label.cpp qt-label.h
+# libgiqt_application_la_SOURCES += qt-line-edit.cpp qt-line-edit.h
+
+# libgiqt_application_la_SOURCES  = qt-widget.cpp qt-widget.h
+# libgiqt_application_la_SOURCES += qt-window.cpp qt-window.h
+# libgiqt_application_la_SOURCES  = qt-plug.cpp qt-plug.h
+libgiqt_application_la_SOURCES  = qt-web-view.cpp qt-web-view.h
 libgiqt_application_la_SOURCES += util.cpp util.h
 
 libgiqt_application_la_CPPFLAGS  = $(AM_CPPFLAGS)
@@ -60,15 +62,15 @@ INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --warn-all \
 
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
-introspection_sources  =
-introspection_sources += qt-widget.h
-introspection_sources += qt-application.h
-introspection_sources += qt-box.h
-introspection_sources += qt-button.h
-introspection_sources += qt-label.h
-introspection_sources += qt-line-edit.h
-introspection_sources += qt-web-view.h
-introspection_sources += qt-window.h
+introspection_sources = qt-web-view.h
+# introspection_sources  = qt-plug.h
+# introspection_sources += qt-widget.h
+# introspection_sources += qt-application.h
+# introspection_sources += qt-box.h
+# introspection_sources += qt-button.h
+# introspection_sources += qt-label.h
+# introspection_sources += qt-line-edit.h
+# introspection_sources += qt-window.h
 
 Qt-1.0.gir: libgiqt-application.la Makefile.am
 Qt_1_0_INCLUDES =
