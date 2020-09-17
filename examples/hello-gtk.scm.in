@@ -1,7 +1,10 @@
-#!@GUILE@ -s
+#! /bin/sh
+# -*- mode: scheme; coding: utf-8 -*-
+exec @GUILE@ --no-auto-compile -e main -s "$0" "$@"
 !#
+
 ;; hello.scm
-;; Copyright (C) 2017-2019 Michael Rosset <mike.rosset@gmail.com>
+;; Copyright (C) 2017-2020 Michael Rosset <mike.rosset@gmail.com>
 
 ;; This file is part of giqt
 
@@ -18,21 +21,35 @@
 ;; You should have received a copy of the GNU General Public License along
 ;; with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(use-modules (g-golf))
+(eval-when (expand load eval)
+  (use-modules (g-golf))
+  (gi-import "WebKit2")
+  (map (match-lambda ((namespace item)
+		      (gi-import-by-name namespace item)))
+       '(("Gtk" "ApplicationWindow")
+	 ("Gtk" "Box")
+	 ("Gtk" "Application")
+	 ("Gtk" "Widget")
+	 ("Gtk" "init")
+	 ("Gtk" "main"))))
 
-(gi-import "WebKit2")
+(define (activate app)
+  (let* ((window (make <gtk-application-window>
+		   #:application app))
+	 (box    (make <gtk-box>))
+	 (view   (make <webkit-web-view>)))
+    (load-uri view "http://gnu.org")
+    (pack-start box view #t #t 0)
+    (add window box)
+    (show-all window)))
 
-(for-each (lambda (x)
-            (gi-import-by-name "Gtk" x))
-          '("Window" "Box" "Application" "Widget" "init" "main"))
+(define (main args)
+  (let ((app (make <gtk-application>
+	       #:application-id "org.gnu.giqt.example")))
 
-(gtk-init #f #f)
+    (connect app
+	     'activate
+	     (lambda (app)
+	       (activate app)))
 
-(let* ((window (make <gtk-window>))
-      (box (make <gtk-box>))
-      (view (make <webkit-web-view>)))
-  (webkit-web-view-load-uri view "http://gnu.org")
-  (gtk-box-pack-start box view #t #t 0)
-  (gtk-container-add window box)
-  (gtk-widget-show-all window)
-  (gtk-main))
+    (run app 0 #f)))
