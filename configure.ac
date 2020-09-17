@@ -31,10 +31,10 @@ dnl Small macro to print out a nice, pretty section title.
 dnl this macro can be found at https://www.edwardrosten.com/code/autoconf/ex_13/configure.ac
 define(SECTION_TITLE,
 [
-        echo >& AS_MESSAGE_FD
-        echo '   $1   ' | sed -e's/./-/g' >&AS_MESSAGE_FD
-        echo '   $1' >& AS_MESSAGE_FD
-        echo '   $1   ' | sed -e's/./-/g' >&AS_MESSAGE_FD
+	echo >& AS_MESSAGE_FD
+	echo '   $1   ' | sed -e's/./-/g' >&AS_MESSAGE_FD
+	echo '   $1' >& AS_MESSAGE_FD
+	echo '   $1   ' | sed -e's/./-/g' >&AS_MESSAGE_FD
 ])
 
 dnl optional enabled
@@ -89,13 +89,10 @@ if test "GJS" = "no"; then
    AC_MSG_ERROR([program gjs-console is required])
 fi
 
-SECTION_TITLE([Checking for GTK/GLIB libraries])
-PKG_CHECK_MODULES(GI_INTROSPECTION, [gobject-introspection-1.0])
-PKG_CHECK_MODULES(GOBJECT, [gobject-2.0])
-PKG_CHECK_MODULES(GLIB, [glib-2.0])
-PKG_CHECK_MODULES(GIO, [gio-2.0])
-PKG_CHECK_MODULES(GTK, [gtk+-3.0])
+SECTION_TITLE([Checking for GLIB libraries])
 GOBJECT_INTROSPECTION_CHECK([1.30.0])
+PKG_CHECK_MODULES(GLIB, [glib-2.0])
+PKG_CHECK_MODULES(GOBJECT, [gobject-2.0])
 
 SECTION_TITLE([Checking for QT libraries])
 PKG_CHECK_MODULES(QT_WIDGET, [Qt5Widgets])

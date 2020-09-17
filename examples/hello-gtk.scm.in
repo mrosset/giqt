@@ -28,6 +28,7 @@ exec @GUILE@ --no-auto-compile -e main -s "$0" "$@"
 
   (use-modules (g-golf))
 
+  (gi-import "Qt")
   (map (match-lambda ((namespace item)
 		      (gi-import-by-name namespace item)))
        '(("Gtk" "ApplicationWindow")
@@ -35,8 +36,7 @@ exec @GUILE@ --no-auto-compile -e main -s "$0" "$@"
 	 ("Gtk" "Label")
 	 ("Gtk" "Application")
 	 ("Gtk" "Widget")
-	 ("Gtk" "Socket")))
-  (gi-import "Qt"))
+	 ("Gtk" "Socket"))))
 
 (define (activate app)
   (let* ((window (make <gtk-application-window>
