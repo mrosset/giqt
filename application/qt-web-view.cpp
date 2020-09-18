@@ -26,6 +26,16 @@
 #include <QWebEngineView>
 #include <QtWebEngine>
 
+typedef enum
+{
+  PROP_WINDOW_ID = 1,
+  N_PROPS
+} QtWebViewProperty;
+
+static GParamSpec *qt_web_view_properties[N_PROPS] = {
+  NULL,
+};
+
 int argc = 0;
 char *argv[] = { NULL };
 
@@ -36,6 +46,7 @@ typedef struct _QtWebViewPrivate QtWebViewPrivate;
 struct _QtWebViewPrivate
 {
   QWebEngineView *qinst;
+  guint window_id;
 };
 
 struct _QtWebView
@@ -52,27 +63,19 @@ qt_web_view_init (QtWebView *self)
   if (!default_app)
     {
       QCoreApplication::setAttribute (Qt::AA_EnableHighDpiScaling);
+      QCoreApplication::setAttribute (Qt::AA_ShareOpenGLContexts);
       default_app = new QApplication (argc, argv);
       QtWebEngine::initialize ();
     }
-
   self->priv = (QtWebViewPrivate *)qt_web_view_get_instance_private (self);
-
-  QWebEngineView *view = new QWebEngineView;
-  view->winId ();
-  view->load (QUrl ("about://"));
-  self->priv->qinst = view;
+  self->priv->qinst = new QWebEngineView;
+  self->priv->qinst->winId ();
 }
 
 QtWebView *
 qt_web_view_new (const long socket_id)
 {
-  QtWebView *self = (QtWebView *)g_object_new (QT_TYPE_WEB_VIEW, NULL);
-  QWebEngineView *view = self->priv->qinst;
-  QWindow *wlbl = view->windowHandle ();
-  wlbl->setParent (QWindow::fromWinId (socket_id));
-  view->show ();
-  return self;
+  return (QtWebView *)g_object_new (QT_TYPE_WEB_VIEW, "window-id", socket_id);
 }
 
 static void
@@ -83,19 +86,84 @@ qt_web_view_finalize (GObject *gobject)
 }
 
 static void
+qt_web_view_set_window_id (QtWebView *self, guint window_id)
+{
+  self->priv->window_id = window_id;
+  g_object_notify_by_pspec (G_OBJECT (self),
+                            qt_web_view_properties[PROP_WINDOW_ID]);
+
+  QWindow *wlbl = self->priv->qinst->windowHandle ();
+  wlbl->setParent (QWindow::fromWinId (self->priv->window_id));
+}
+
+static void
+qt_web_view_set_property (GObject *object, guint property_id,
+                          const GValue *value, GParamSpec *pspec)
+{
+  QtWebView *self = QT_WEB_VIEW (object);
+
+  switch ((QtWebViewProperty)property_id)
+    {
+
+    case PROP_WINDOW_ID:
+      qt_web_view_set_window_id (self, g_value_get_uint (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+      break;
+    }
+}
+
+static void
+qt_web_view_get_property (GObject *object, guint property_id, GValue *value,
+                          GParamSpec *pspec)
+{
+
+  QtWebView *self = QT_WEB_VIEW (object);
+
+  QtWebViewPrivate *priv
+      = (QtWebViewPrivate *)qt_web_view_get_instance_private (self);
+
+  switch ((QtWebViewProperty)property_id)
+    {
+    case PROP_WINDOW_ID:
+      g_value_set_uint (value, priv->window_id);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+      break;
+    }
+}
+
+static void
 qt_web_view_class_init (QtWebViewClass *klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
   gobject_class->finalize = qt_web_view_finalize;
+  gobject_class->set_property = qt_web_view_set_property;
+  gobject_class->get_property = qt_web_view_get_property;
+
+  // clang-format off
+  qt_web_view_properties[PROP_WINDOW_ID] =
+    g_param_spec_uint ("window-id",
+		       "WindowID",
+		       "GtkSocket id to use",
+		       0,
+		       G_MAXINT,
+		       0,
+		       G_PARAM_READWRITE);
+  // clang-format on
+
+  g_object_class_install_properties (gobject_class, N_PROPS,
+                                     qt_web_view_properties);
 }
 
 void
 qt_web_view_load_uri (QtWebView *self, const char *uri)
 {
-  g_print ("LOAD_URI\n");
-  GMainContext *worker_context = g_main_context_new ();
-  g_main_context_push_thread_default (worker_context);
   self->priv->qinst->load (QUrl (uri));
-  g_main_context_pop_thread_default (worker_context);
+  self->priv->qinst->show ();
 }

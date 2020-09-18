@@ -30,34 +30,35 @@ exec @GUILE@ --no-auto-compile -e main -s "$0" "$@"
 
   (gi-import "Qt")
   (map (match-lambda ((namespace item)
-		      (gi-import-by-name namespace item)))
+                      (gi-import-by-name namespace item)))
        '(("Gtk" "ApplicationWindow")
-	 ("Gtk" "VBox")
-	 ("Gtk" "Label")
-	 ("Gtk" "Application")
-	 ("Gtk" "Widget")
-	 ("Gtk" "Socket"))))
+         ("Gtk" "VBox")
+         ("Gtk" "Label")
+         ("Gtk" "Application")
+         ("Gtk" "Widget")
+         ("Gtk" "Socket"))))
 
 (define (activate app)
   (let* ((window (make <gtk-application-window>
-		   #:application app))
-	 (vbox   (make <gtk-vbox>))
-	 (label  (make <gtk-label> #:label "Hello GNU!"))
-	 (socket (make <gtk-socket>)))
+                   #:application app))
+         (vbox   (make <gtk-vbox>))
+         (label  (make <gtk-label> #:label "Hello GNU!"))
+         (socket (make <gtk-socket>)))
     (pack-start vbox socket #t #t 0)
     (pack-start vbox label #f #f 0)
     (add window vbox)
-    (let ((view (qt-web-view-new (get-id socket))))
-      (format #t "socket-id: ~a\n" (get-id socket))
-      (load-uri view "https://gnu.org")
-      (show-all window))))
+    (format #t "socket-id: ~a\n" (get-id socket))
+    (let ((view (make <qt-web-view>
+                  #:window-id (get-id socket))))
+      (load-uri view "https://gnu.org"))
+    (show-all window)))
 
 (define (main args)
   (let ((app (make <gtk-application>
-	       #:application-id "org.gnu.giqt.example")))
+               #:application-id "org.gnu.giqt.example")))
     (connect app 'activate
-	     (lambda (app)
-	       (activate app)))
+             (lambda (app)
+               (activate app)))
     (run app (length args) args)))
 
 ;; Local Variables:
