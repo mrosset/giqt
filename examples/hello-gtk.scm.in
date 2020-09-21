@@ -43,14 +43,25 @@ exec @GUILE@ --no-auto-compile -e main -s "$0" "$@"
                    #:application app))
          (vbox   (make <gtk-vbox>))
          (label  (make <gtk-label> #:label "Hello GNU!"))
+         (view   (make <qt-web-view>))
          (socket (make <gtk-socket>)))
     (pack-start vbox socket #t #t 0)
-    (pack-start vbox label #f #f 0)
+    (pack-end vbox label #f #f 0)
     (add window vbox)
+
+    (connect socket 'plug-added
+             (lambda (s)
+               (display "ADD\n")
+               (load-uri view "http://bufio.org")))
+
+    (connect socket 'plug-removed
+             (lambda (s)
+               (display "ADD\n")))
+
+    (add-id socket (get-id view))
+
     (format #t "socket-id: ~a\n" (get-id socket))
-    (let ((view (make <qt-web-view>
-                  #:window-id (get-id socket))))
-      (load-uri view "https://gnu.org"))
+
     (show-all window)))
 
 (define (main args)

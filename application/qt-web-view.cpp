@@ -85,15 +85,22 @@ qt_web_view_finalize (GObject *gobject)
   G_OBJECT_CLASS (qt_web_view_parent_class)->finalize (gobject);
 }
 
-static void
-qt_web_view_set_window_id (QtWebView *self, guint window_id)
+void
+qt_web_view_set_id (QtWebView *self, guint window_id)
 {
   self->priv->window_id = window_id;
   g_object_notify_by_pspec (G_OBJECT (self),
                             qt_web_view_properties[PROP_WINDOW_ID]);
-
   QWindow *wlbl = self->priv->qinst->windowHandle ();
   wlbl->setParent (QWindow::fromWinId (self->priv->window_id));
+}
+
+guint
+qt_web_view_get_id (QtWebView *self)
+{
+  QWebEngineView *view = self->priv->qinst;
+  qInfo () << "ID" << view->winId ();
+  return view->winId ();
 }
 
 static void
@@ -106,7 +113,7 @@ qt_web_view_set_property (GObject *object, guint property_id,
     {
 
     case PROP_WINDOW_ID:
-      qt_web_view_set_window_id (self, g_value_get_uint (value));
+      qt_web_view_set_id (self, g_value_get_uint (value));
       break;
 
     default:
@@ -149,12 +156,12 @@ qt_web_view_class_init (QtWebViewClass *klass)
   // clang-format off
   qt_web_view_properties[PROP_WINDOW_ID] =
     g_param_spec_uint ("window-id",
-		       "WindowID",
-		       "GtkSocket id to use",
-		       0,
-		       G_MAXINT,
-		       0,
-		       G_PARAM_READWRITE);
+                       "WindowID",
+                       "GtkSocket id to use",
+                       0,
+                       G_MAXINT,
+                       0,
+                       G_PARAM_READWRITE);
   // clang-format on
 
   g_object_class_install_properties (gobject_class, N_PROPS,
@@ -162,8 +169,21 @@ qt_web_view_class_init (QtWebViewClass *klass)
 }
 
 void
+qt_web_view_show (QtWebView *self)
+{
+  self->priv->qinst->show ();
+}
+
+void
+qt_web_view_reload (QtWebView *self)
+{
+  self->priv->qinst->reload ();
+  self->priv->qinst->show ();
+}
+
+void
 qt_web_view_load_uri (QtWebView *self, const char *uri)
 {
   self->priv->qinst->load (QUrl (uri));
-  self->priv->qinst->show ();
+  qt_web_view_show (self);
 }

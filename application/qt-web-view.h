@@ -32,6 +32,14 @@ QtWebView *qt_web_view_new (const long socket_id);
 
 void qt_web_view_load_uri (QtWebView *self, const char *uri);
 
+void qt_web_view_show (QtWebView *self);
+
+void qt_web_view_reload (QtWebView *self);
+
+void qt_web_view_set_id (QtWebView *self, guint window_id);
+
+guint qt_web_view_get_id (QtWebView *self);
+
 G_END_DECLS
 
 #endif /* __QT_WEB_VIEW_H__ */
